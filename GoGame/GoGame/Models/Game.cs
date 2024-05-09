@@ -8,21 +8,59 @@ namespace GoGame.Models
 {
     internal class Game
     {
-        public List<Stone> Board { get; }
-        public Player CurrentPlayer { get; private set; }
+        public Board board;
+        public CellState playr1 = CellState.White;
+        public CellState playr2 = CellState.Black;
 
-        public Game(int boardSize, Player startingPlayer)
+        public Game()
         {
-            Board = new List<Stone>();
-            // Инициализация игрового поля с пустыми камнями
-            for (int x = 0; x < boardSize; x++)
+            board = new Board();          
+        }
+
+        public bool IsMoveValid(int x, int y, CellState stoneColor)
+        {
+            // Проверка на пустую клетку
+            if (board.GetStoneAt(x, y) != CellState.Empty)
+                return false;
+
+            // Проверка на самоубийство
+            if (IsSuicide(x, y, stoneColor))
+                return false;
+
+            // Проверка на захват камней противника
+            List<(int, int)> capturedStones = GetCapturedStones(x, y, stoneColor);
+            if (capturedStones.Count > 0)
             {
-                for (int y = 0; y < boardSize; y++)
+                foreach (var (capturedX, capturedY) in capturedStones)
                 {
-                    Board.Add(new Stone(x, y, CellState.Empty));
+                    board.boardCellState[capturedX, capturedY] = CellState.Empty;
                 }
+                return true;
             }
-            CurrentPlayer = startingPlayer;
+
+            // Проверка на запрет хода (ко рку)
+            if (IsKo(x, y, stoneColor))
+                return false;
+
+            return true;
+        }
+
+        private bool IsSuicide(int x, int y, CellState stoneColor)
+        {
+            // TODO: Реализовать проверку на самоубийство
+            throw new NotImplementedException();
+        }
+
+        private List<(int, int)> GetCapturedStones(int x, int y, CellState stoneColor)
+        {
+            // TODO: Реализовать проверку на захват камней противника
+            throw new NotImplementedException();
+        }
+
+        private bool IsKo(int x, int y, CellState stoneColor)
+        {
+            // TODO: Реализовать проверку на запрет хода (ко рку)
+            throw new NotImplementedException();
         }
     }
 }

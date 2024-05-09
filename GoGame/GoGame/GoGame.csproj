@@ -100,7 +100,6 @@
     </ApplicationDefinition>
     <Compile Include="AppSettings\GameSettings.cs" />
     <Compile Include="Models\Board.cs" />
-    <Compile Include="Models\GoGameRules.cs" />
     <Compile Include="Services\GameLogicService.cs" />
     <Compile Include="Services\SerializationService.cs" />
     <Compile Include="Services\UndoRedoService.cs" />
@@ -128,8 +127,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Game.cs" />
-    <Compile Include="Models\Player.cs" />
-    <Compile Include="Models\Stone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

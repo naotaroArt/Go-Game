@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GoGame.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="450">
     <Grid>
-            
+        <Rectangle HorizontalAlignment="Center" Height="450" Stroke="Yellow" VerticalAlignment="Center" Width="450" />
+
     </Grid>
 </UserControl>
