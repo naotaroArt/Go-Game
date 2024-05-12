@@ -103,8 +103,6 @@
     <Compile Include="Services\GameLogicService.cs" />
     <Compile Include="Services\SerializationService.cs" />
     <Compile Include="Services\UndoRedoService.cs" />
-    <Compile Include="ViewModels\GameBoardViewModel.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\GameBoard.xaml.cs">
       <DependentUpon>GameBoard.xaml</DependentUpon>
     </Compile>

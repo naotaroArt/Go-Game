@@ -6,12 +6,18 @@
         xmlns:local="clr-namespace:GoGame"
         xmlns:locall="clr-namespace:GoGame.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="1000">
+        Title="MainWindow" Height="500" Width="800">
     <Grid Width="Auto">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="500*"></ColumnDefinition>
+            <ColumnDefinition Width="300*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <locall:GameBoard Grid.Column="0" Grid.Row="0" Width="460" Height="460"></locall:GameBoard>
+        <ContentControl Grid.Column="0" x:Name="contentControl" Width="460" Height="460"/>
+        <StackPanel Grid.Column="1">
+            <Label Content="Current Move"/>
+            <Ellipse x:Name="ellipseCurrentMove" Width="50" Height="50" StrokeThickness="1" Stroke="Black" HorizontalAlignment="Left">
+                
+            </Ellipse>
+        </StackPanel>
     </Grid>
 </Window>

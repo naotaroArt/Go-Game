@@ -14,5 +14,9 @@ namespace GoGame.AppSettings
         {
             BoardSize = boardSize;
         }
+        public GameSettings()
+        {
+            BoardSize = 9;
+        }
     }
 }

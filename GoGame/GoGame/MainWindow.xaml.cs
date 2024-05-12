@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GoGame.Models;
+using GoGame.AppSettings;
+using System.Runtime.CompilerServices;
 
 namespace GoGame
 {
@@ -19,10 +22,16 @@ namespace GoGame
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {       
+    {
+        private Game _game;
+        private static GameSettings _gameSetting;
         public MainWindow()
         {
             InitializeComponent();
+            _gameSetting = new GameSettings();
+            _game = new Game(this);
         }
+
+        ellipseCurrentMove
     }
 }

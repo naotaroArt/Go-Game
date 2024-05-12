@@ -9,12 +9,19 @@ namespace GoGame.Models
     internal class Game
     {
         public Board board;
-        public CellState playr1 = CellState.White;
-        public CellState playr2 = CellState.Black;
+        public static CellState playr1 = CellState.White;
+        public static CellState playr2 = CellState.Black;
+        public CellState currentMove;
+        Views.GameBoard gameBoard;
+        public int[] score;
 
-        public Game()
+        public Game(MainWindow mainWindow)
         {
-            board = new Board();          
+            board = new Board();
+            currentMove = playr1;
+            gameBoard = new Views.GameBoard(this);
+            mainWindow.contentControl.Content = gameBoard;
+            score = new int[2] { 0, 0 };
         }
 
         public bool IsMoveValid(int x, int y, CellState stoneColor)
@@ -48,19 +55,22 @@ namespace GoGame.Models
         private bool IsSuicide(int x, int y, CellState stoneColor)
         {
             // TODO: Реализовать проверку на самоубийство
-            throw new NotImplementedException();
+            return false;
         }
 
         private List<(int, int)> GetCapturedStones(int x, int y, CellState stoneColor)
         {
+            List<(int, int)> list = new List<(int, int)>();
             // TODO: Реализовать проверку на захват камней противника
-            throw new NotImplementedException();
+            return list;
         }
 
         private bool IsKo(int x, int y, CellState stoneColor)
         {
             // TODO: Реализовать проверку на запрет хода (ко рку)
-            throw new NotImplementedException();
+            return false;
         }
+
+        
     }
 }

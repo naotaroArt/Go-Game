@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GoGame.Models;
 
 namespace GoGame.Views
 {
@@ -20,11 +21,13 @@ namespace GoGame.Views
     /// </summary>
     public partial class GameBoard : UserControl
     {
-        public GameBoard()
+        private Game game; 
+        internal GameBoard(Game game)
         {
             InitializeComponent();
             FillGridWithBorders();
             FillGridWithButtons();
+            this.game = game;
         }
 
         private void FillGridWithBorders()
@@ -66,8 +69,9 @@ namespace GoGame.Views
 
                     Ellipse ellipse = new Ellipse
                     {
-                        Width = 50,
-                        Height = 50,
+                        Name = $"ellipse_{row}_{col}",
+                        Width = 40,
+                        Height = 40,
                         Fill = new SolidColorBrush(Color.FromArgb(128, 128, 128, 128)), // Полупрозрачный цвет
                         Visibility = Visibility.Hidden // Изначально скрываем эллипс
 
@@ -104,7 +108,16 @@ namespace GoGame.Views
                 int row, col;
                 if (int.TryParse(parts[1], out row) && int.TryParse(parts[2], out col))
                 {
-                    MessageBox.Show($"Button clicked: x:{col} y:{row}");
+                    if (game.IsMoveValid(col, row, game.currentMove))
+                    {
+                        game.board.boardCellState[col, row] = game.currentMove;
+                        game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White; 
+                        MessageBox.Show($"Button clicked: x:{col} y:{row}");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Button clicked: x:{col} y:{row}\n move is impossible");
+                    }
                 }
             }
         }

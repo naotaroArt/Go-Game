@@ -11,11 +11,12 @@ namespace GoGame.Models
 
     internal class Board
     {
-        public int boardSize = GameSettings.BoardSize;
+        public int boardSize;
         public CellState[,] boardCellState;
 
         public Board()
         {
+            boardSize = GameSettings.BoardSize;
             boardCellState = new CellState[boardSize, boardSize];
             InitializeBoard();
         }
