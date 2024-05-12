@@ -102,30 +102,48 @@ namespace GoGame.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
+            Ellipse ellipseToAdd = null;
             string[] parts = button.Name.Split('_');
-            if (parts.Length == 3)
+            int row = Grid.GetRow(button);
+            int col = Grid.GetColumn(button);
+            if (game.board.boardCellState[col, row] == CellState.Empty && game.IsMoveValid(col, row, game.currentMove))
             {
-                int row, col;
-                if (int.TryParse(parts[1], out row) && int.TryParse(parts[2], out col))
+                game.board.boardCellState[col, row] = game.currentMove;
+                foreach (var child in gridBoardBig.Children)
                 {
-                    if (game.IsMoveValid(col, row, game.currentMove))
+                    if (child is Ellipse)
                     {
-                        game.board.boardCellState[col, row] = game.currentMove;
-                        game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White; 
-                        MessageBox.Show($"Button clicked: x:{col} y:{row}");
-                    }
-                    else
-                    {
-                        MessageBox.Show($"Button clicked: x:{col} y:{row}\n move is impossible");
+                        ellipseToAdd = (Ellipse)child;
+                        break;
                     }
                 }
+
+                if (ellipseToAdd != null)
+                {
+                    ellipseToAdd.Visibility = Visibility.Visible;
+                    ellipseToAdd.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+                }
+                game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White; 
+                game.mainWindow.ellipseCurrentMove.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+                MessageBox.Show($"Button clicked: x:{col} y:{row}");
             }
+            else
+            {
+                MessageBox.Show($"Button clicked: x:{col} y:{row}\n move is impossible");
+            }
+                
+            
         }
 
         private void Button_MouseEnter(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             Ellipse ellipse = null;
+            int row = Grid.GetRow(button);
+            int col = Grid.GetColumn(button);
+            string[] parts = button.Name.Split('_');           
+            if (game.board.boardCellState[col, row] != CellState.Empty)
+                return;          
             if (button != null)
             {
                 button.Background = Brushes.Transparent;
@@ -136,8 +154,6 @@ namespace GoGame.Views
                         ellipse = (Ellipse)child;
                     }
                 }
-                int row = Grid.GetRow(button);
-                int col = Grid.GetColumn(button);
                 Grid.SetRow(ellipse, row);
                 Grid.SetColumn(ellipse, col);
                 ellipse.Visibility = Visibility.Visible;               
@@ -146,8 +162,14 @@ namespace GoGame.Views
 
         private void Button_MouseLeave(object sender, RoutedEventArgs e)
         {
+            Button button = sender as Button;
             Ellipse ellipseToHidden = null;
-            foreach (var child in gridBoardBig.Children)
+            string[] parts = button.Name.Split('_');
+            int row = Grid.GetRow(button);
+            int col = Grid.GetColumn(button);
+            if (game.board.boardCellState[col, row] != CellState.Empty)
+                return;           
+            foreach (var child in gridBoardBig.)
             {
                 if (child is Ellipse)
                 {

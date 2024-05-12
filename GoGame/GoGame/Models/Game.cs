@@ -12,7 +12,8 @@ namespace GoGame.Models
         public static CellState playr1 = CellState.White;
         public static CellState playr2 = CellState.Black;
         public CellState currentMove;
-        Views.GameBoard gameBoard;
+        public Views.GameBoard gameBoard;
+        public MainWindow mainWindow;
         public int[] score;
 
         public Game(MainWindow mainWindow)
@@ -21,6 +22,7 @@ namespace GoGame.Models
             currentMove = playr1;
             gameBoard = new Views.GameBoard(this);
             mainWindow.contentControl.Content = gameBoard;
+            this.mainWindow = mainWindow;
             score = new int[2] { 0, 0 };
         }
 

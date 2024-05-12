@@ -25,13 +25,13 @@ namespace GoGame
     {
         private Game _game;
         private static GameSettings _gameSetting;
+
         public MainWindow()
         {
             InitializeComponent();
             _gameSetting = new GameSettings();
             _game = new Game(this);
-        }
-
-        ellipseCurrentMove
+            ellipseCurrentMove.Fill = Brushes.White;
+        }       
     }
 }
