@@ -26,7 +26,7 @@ namespace GoGame.Views
         {
             InitializeComponent();
             FillGridWithBorders();
-            FillGridWithButtons();
+            FillGridWithEllipse();
             this.game = game;
         }
 
@@ -51,78 +51,45 @@ namespace GoGame.Views
             }
         }
 
-        private void FillGridWithButtons()
+        private void FillGridWithEllipse()
         {
             // Заполняем каждую ячейку Grid кнопкой
             for (int row = 0; row < 9; row++)
             {
                 for (int col = 0; col < 9; col++)
                 {
-                    // Создаем кнопку
-                    Button button = new Button
-                    {
-                        Name = $"button_{row}_{col}",
-                       Background = Brushes.Transparent,
-                        BorderBrush = Brushes.Transparent,
-                    };
-
-
                     Ellipse ellipse = new Ellipse
                     {
                         Name = $"ellipse_{row}_{col}",
                         Width = 40,
                         Height = 40,
-                        Fill = new SolidColorBrush(Color.FromArgb(128, 128, 128, 128)), // Полупрозрачный цвет
-                        Visibility = Visibility.Hidden // Изначально скрываем эллипс
-
+                        Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)), // Полупрозрачный цвет
                     };
-                    Panel.SetZIndex(button, 2);
-                    Panel.SetZIndex(ellipse, 1);
 
                     Grid.SetRow(ellipse, row);
                     Grid.SetColumn(ellipse, col);
                     gridBoardBig.Children.Add(ellipse);
 
-                    ApplyCustomButtonStyle(button);
 
                     // Устанавливаем обработчик события нажатия кнопки
 
-                    button.Click += Button_Click;
-                    button.MouseEnter += Button_MouseEnter;
-                    button.MouseLeave += Button_MouseLeave;
+                    ellipse.MouseDown += Button_Click;
+                    ellipse.MouseEnter += Button_MouseEnter;
+                    ellipse.MouseLeave += Button_MouseLeave;
 
-                    // Добавляем кнопку в соответствующую ячейку Grid
-                    Grid.SetRow(button, row);
-                    Grid.SetColumn(button, col);
-                    gridBoardBig.Children.Add(button);
                 }
             }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            Ellipse ellipseToAdd = null;
-            string[] parts = button.Name.Split('_');
-            int row = Grid.GetRow(button);
-            int col = Grid.GetColumn(button);
+            Ellipse ellipse = sender as Ellipse;
+            int row = Grid.GetRow(ellipse);
+            int col = Grid.GetColumn(ellipse);
             if (game.board.boardCellState[col, row] == CellState.Empty && game.IsMoveValid(col, row, game.currentMove))
             {
-                game.board.boardCellState[col, row] = game.currentMove;
-                foreach (var child in gridBoardBig.Children)
-                {
-                    if (child is Ellipse)
-                    {
-                        ellipseToAdd = (Ellipse)child;
-                        break;
-                    }
-                }
-
-                if (ellipseToAdd != null)
-                {
-                    ellipseToAdd.Visibility = Visibility.Visible;
-                    ellipseToAdd.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
-                }
+                game.board.boardCellState[col, row] = game.currentMove;               
+                ellipse.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;          
                 game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White; 
                 game.mainWindow.ellipseCurrentMove.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
                 MessageBox.Show($"Button clicked: x:{col} y:{row}");
@@ -130,58 +97,33 @@ namespace GoGame.Views
             else
             {
                 MessageBox.Show($"Button clicked: x:{col} y:{row}\n move is impossible");
-            }
-                
-            
+            }                          
         }
 
         private void Button_MouseEnter(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            Ellipse ellipse = null;
-            int row = Grid.GetRow(button);
-            int col = Grid.GetColumn(button);
-            string[] parts = button.Name.Split('_');           
+            Ellipse ellipse = sender as Ellipse;
+            int row = Grid.GetRow(ellipse);
+            int col = Grid.GetColumn(ellipse);      
             if (game.board.boardCellState[col, row] != CellState.Empty)
                 return;          
-            if (button != null)
+            if (ellipse != null)
             {
-                button.Background = Brushes.Transparent;
-                foreach (var child in gridBoardBig.Children)
-                {
-                    if (child is Ellipse)
-                    {
-                        ellipse = (Ellipse)child;
-                    }
-                }
-                Grid.SetRow(ellipse, row);
-                Grid.SetColumn(ellipse, col);
-                ellipse.Visibility = Visibility.Visible;               
+                if(game.currentMove == CellState.White)
+                    ellipse.Fill = new SolidColorBrush(Color.FromArgb(128, 255, 255, 255));
+                else
+                    ellipse.Fill = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
             }
         }
 
         private void Button_MouseLeave(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            Ellipse ellipseToHidden = null;
-            string[] parts = button.Name.Split('_');
-            int row = Grid.GetRow(button);
-            int col = Grid.GetColumn(button);
+            Ellipse ellipse = sender as Ellipse;
+            int row = Grid.GetRow(ellipse);
+            int col = Grid.GetColumn(ellipse);
             if (game.board.boardCellState[col, row] != CellState.Empty)
                 return;           
-            foreach (var child in gridBoardBig.)
-            {
-                if (child is Ellipse)
-                {
-                    ellipseToHidden = (Ellipse)child;
-                    break;
-                }
-            }
-
-            if (ellipseToHidden != null)
-            {
-                ellipseToHidden.Visibility = Visibility.Hidden;
-            }
+            ellipse.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         }
 
         private void ApplyCustomButtonStyle(Button button)
