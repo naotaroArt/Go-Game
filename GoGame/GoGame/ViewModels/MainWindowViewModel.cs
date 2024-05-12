@@ -22,7 +22,6 @@ namespace GoGame.ViewModels
         {
             // Отображаем игровое поле в главном окне
             MainWindow main = (MainWindow)parameter;
-            main.MainFrame.Content = new GameBoard();
         }
     }
 }

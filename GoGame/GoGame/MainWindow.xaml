@@ -4,9 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GoGame"
+        xmlns:locall="clr-namespace:GoGame.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Frame Name="MainFrame" NavigationUIVisibility="Hidden"/>
+        Title="MainWindow" Height="500" Width="1000">
+    <Grid Width="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <locall:GameBoard Grid.Column="0" Grid.Row="0" Width="460" Height="460"></locall:GameBoard>
     </Grid>
 </Window>

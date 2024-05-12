@@ -5,9 +5,51 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GoGame.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="450">
-    <Grid>
-        <Rectangle HorizontalAlignment="Center" Height="450" Stroke="Yellow" VerticalAlignment="Center" Width="450" />
-
+             d:DesignHeight="460" d:DesignWidth="460" Background="DarkGoldenrod">
+    <Grid Name="gridBoardBig" Background="Goldenrod" Margin="10,10,10,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Margin="25,25,25,25" Grid.ColumnSpan = "9"  Grid.RowSpan ="9" Name="gridBoard">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+        </Grid>
     </Grid>
 </UserControl>
