@@ -11,16 +11,34 @@ namespace GoGame.Services
 {
     internal class SerializationService
     {
-        public void SaveGame(Game game, string filePath)
+        public void SaveGame(Game game)
         {
-            string json = JsonSerializer.Serialize(game);
-            File.WriteAllText(filePath, json);
+            // Открываем диалоговое окно сохранения файла
+            Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+            saveFileDialog.Filter = "Файлы сохранения (*.json)|*.json|Все файлы (*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                // Получаем путь к выбранному файлу
+                string filePath = saveFileDialog.FileName;
+
+                string json = JsonSerializer.Serialize(game);
+                File.WriteAllText(filePath, json);
+            }
         }
 
-        public Game LoadGame(string filePath)
+        public Game LoadGame()
         {
-            string json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<Game>(json);
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = "Файлы сохранения (*.json)|*.json|Все файлы (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                // Получаем путь к выбранному файлу
+                string filePath = openFileDialog.FileName;
+
+                string json = File.ReadAllText(filePath);
+                return JsonSerializer.Deserialize<Game>(json);
+            }
+            return JsonSerializer.Deserialize<Game>("");
         }
     }
 }

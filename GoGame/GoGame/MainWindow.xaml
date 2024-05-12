@@ -16,8 +16,9 @@
         <StackPanel Grid.Column="1">
             <Label Content="Current Move"/>
             <Ellipse x:Name="ellipseCurrentMove" Width="50" Height="50" StrokeThickness="1" Stroke="Black" HorizontalAlignment="Left">
-                
             </Ellipse>
+            <Button x:Name="SaveButton" Content="Save Game" Width="100" Height="50" HorizontalAlignment="Left" Margin="5 5 5 5" Click="SaveButton_Click"></Button>
+            <Button x:Name="LoadButton" Content="Load Game" Width="100" Height="50" HorizontalAlignment="Left" Margin="5 5 5 5" Click="LoadButton_Click"></Button>
         </StackPanel>
     </Grid>
 </Window>

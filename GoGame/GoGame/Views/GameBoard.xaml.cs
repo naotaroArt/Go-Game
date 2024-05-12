@@ -73,15 +73,15 @@ namespace GoGame.Views
 
                     // Устанавливаем обработчик события нажатия кнопки
 
-                    ellipse.MouseDown += Button_Click;
-                    ellipse.MouseEnter += Button_MouseEnter;
-                    ellipse.MouseLeave += Button_MouseLeave;
+                    ellipse.MouseDown += Ellipse_Click;
+                    ellipse.MouseEnter += Ellipse_MouseEnter;
+                    ellipse.MouseLeave += Ellipse_MouseLeave;
 
                 }
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Ellipse_Click(object sender, RoutedEventArgs e)
         {
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
@@ -100,7 +100,7 @@ namespace GoGame.Views
             }                          
         }
 
-        private void Button_MouseEnter(object sender, RoutedEventArgs e)
+        private void Ellipse_MouseEnter(object sender, RoutedEventArgs e)
         {
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
@@ -116,7 +116,7 @@ namespace GoGame.Views
             }
         }
 
-        private void Button_MouseLeave(object sender, RoutedEventArgs e)
+        private void Ellipse_MouseLeave(object sender, RoutedEventArgs e)
         {
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
@@ -124,27 +124,6 @@ namespace GoGame.Views
             if (game.board.boardCellState[col, row] != CellState.Empty)
                 return;           
             ellipse.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-        }
-
-        private void ApplyCustomButtonStyle(Button button)
-        {
-            // Создание нового стиля для кнопки
-            Style customButtonStyle = new Style(typeof(Button));
-
-            // Установка свойства Template для определения внешнего вида кнопки
-            ControlTemplate template = new ControlTemplate(typeof(Button));
-            FrameworkElementFactory borderFactory = new FrameworkElementFactory(typeof(Border));
-            borderFactory.SetValue(Border.BackgroundProperty, Brushes.Transparent);
-            FrameworkElementFactory textBlockFactory = new FrameworkElementFactory(typeof(TextBlock));
-            textBlockFactory.SetBinding(TextBlock.TextProperty, new Binding("Content") { RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent) });
-            textBlockFactory.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Center);
-            textBlockFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-            borderFactory.AppendChild(textBlockFactory);
-            template.VisualTree = borderFactory;
-            customButtonStyle.Setters.Add(new Setter(Button.TemplateProperty, template));
-
-            // Применение стиля к кнопке
-            button.Style = customButtonStyle;
-        }        
+        }  
     }
 }

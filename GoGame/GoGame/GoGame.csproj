@@ -100,7 +100,6 @@
     </ApplicationDefinition>
     <Compile Include="AppSettings\GameSettings.cs" />
     <Compile Include="Models\Board.cs" />
-    <Compile Include="Services\GameLogicService.cs" />
     <Compile Include="Services\SerializationService.cs" />
     <Compile Include="Services\UndoRedoService.cs" />
     <Compile Include="Views\GameBoard.xaml.cs">

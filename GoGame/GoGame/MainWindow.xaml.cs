@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GoGame.Models;
 using GoGame.AppSettings;
+using GoGame.Services;
 using System.Runtime.CompilerServices;
 
 namespace GoGame
@@ -25,6 +26,7 @@ namespace GoGame
     {
         private Game _game;
         private static GameSettings _gameSetting;
+        private SerializationService _serializationService;
 
         public MainWindow()
         {
@@ -32,6 +34,17 @@ namespace GoGame
             _gameSetting = new GameSettings();
             _game = new Game(this);
             ellipseCurrentMove.Fill = Brushes.White;
+            _serializationService = new SerializationService();
         }       
+
+        public void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            _serializationService.SaveGame(_game);
+        }
+
+        public void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            _game = _serializationService.LoadGame();
+        }
     }
 }
