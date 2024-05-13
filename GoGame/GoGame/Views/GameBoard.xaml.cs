@@ -86,13 +86,14 @@ namespace GoGame.Views
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
             int col = Grid.GetColumn(ellipse);
-            if (game.board.boardCellState[col, row] == CellState.Empty && game.IsMoveValid(col, row, game.currentMove))
+            if (game.board.boardStone[col, row].state == CellState.Empty && game.IsMoveValid(col, row, game.currentMove))
             {
-                game.board.boardCellState[col, row] = game.currentMove;               
-                ellipse.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;          
+                game.board.boardStone[col, row].state = game.currentMove;               
+                ellipse.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+                game.board.UpdateBordStons();
                 game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White; 
                 game.mainWindow.ellipseCurrentMove.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
-                MessageBox.Show($"Button clicked: x:{col} y:{row}");
+                //MessageBox.Show($"Button clicked: x:{col} y:{row}");
             }
             else
             {
@@ -105,7 +106,7 @@ namespace GoGame.Views
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
             int col = Grid.GetColumn(ellipse);      
-            if (game.board.boardCellState[col, row] != CellState.Empty)
+            if (game.board.boardStone[col, row].state != CellState.Empty)
                 return;          
             if (ellipse != null)
             {
@@ -121,7 +122,7 @@ namespace GoGame.Views
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
             int col = Grid.GetColumn(ellipse);
-            if (game.board.boardCellState[col, row] != CellState.Empty)
+            if (game.board.boardStone[col, row].state != CellState.Empty)
                 return;           
             ellipse.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         }  
