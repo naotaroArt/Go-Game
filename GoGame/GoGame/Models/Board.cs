@@ -27,9 +27,11 @@ namespace GoGame.Models
     {
         public int boardSize;
         public Stone[,] boardStone;
+        List<(int, int)> checkedStones;
 
         public Board()
         {
+            checkedStones = new List<(int, int)> ();
             boardSize = GameSettings.BoardSize;
             boardStone = new Stone[boardSize, boardSize];
             InitializeBoard();
@@ -41,15 +43,17 @@ namespace GoGame.Models
             {
                 for (int j = 0; j < boardSize; j++)
                 {
-                    boardStone[i, j] = new Stone();
-                    boardStone[i, j].state = CellState.Empty;
-                    boardStone[i, j].x = i;
-                    boardStone[i, j].y = j;
-                    boardStone[i, j].stateTop = CellState.Empty;
-                    boardStone[i, j].stateBot = CellState.Empty;
-                    boardStone[i, j].stateLeft = CellState.Empty;
-                    boardStone[i, j].stateRight = CellState.Empty;
-                    boardStone[i, j].groupOfStones = new List<Stone>();
+                    boardStone[i, j] = new Stone
+                    {
+                        state = CellState.Empty,
+                        x = i,
+                        y = j,
+                        stateTop = CellState.Empty,
+                        stateBot = CellState.Empty,
+                        stateLeft = CellState.Empty,
+                        stateRight = CellState.Empty,
+                        groupOfStones = new List<Stone>()
+                    };
                 }
             }
         }
@@ -76,7 +80,7 @@ namespace GoGame.Models
             return x >= 0 && x < boardSize && y >= 0 && y < boardSize;
         }
 
-        public void СheckWayStone(Stone stone)
+        public void СheckWayStone(ref Stone stone)
         {
             try
             {
@@ -100,70 +104,95 @@ namespace GoGame.Models
             catch { stone.stateRight = CellState.OutRange; }
         }
 
-        public void CheckGroupOfStone(Stone stone)
+        public void CheckGroupOfStone(ref Stone stone)
         {
+            if(stone.state == CellState.White || stone.state == CellState.Black)
+                stone.groupOfStones.Add(stone);
             try
             {
-                if (stone.state == stone.stateTop)
+                if (stone.state != CellState.Empty && stone.state == stone.stateTop)
                 {
-                    foreach (Stone s in ReCheckGroupOfStone(boardStone[stone.x, stone.y - 1], Direction.bot))
+                    foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x, stone.y - 1], Direction.bot))
                         stone.groupOfStones.Add(s);
                 }
             }
             catch { }
             try
             {
-                if (stone.state == stone.stateBot)
+                if (stone.state != CellState.Empty && stone.state == stone.stateBot)
                 {
-                    foreach (Stone s in ReCheckGroupOfStone(boardStone[stone.x, stone.y + 1], Direction.top))
+                    foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x, stone.y + 1], Direction.top))
                         stone.groupOfStones.Add(s);
                 }
             }
             catch { }
             try
             {
-                if (stone.state == stone.stateLeft)
+                if (stone.state != CellState.Empty && stone.state == stone.stateLeft)
                 {
-                    foreach (Stone s in ReCheckGroupOfStone(boardStone[stone.x+1, stone.y], Direction.right))
+                    foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x - 1, stone.y], Direction.right))
                         stone.groupOfStones.Add(s);
                 }
             }
             catch { }
             try
             {
-                if (stone.state == stone.stateRight)
+                if (stone.state != CellState.Empty && stone.state == stone.stateRight)
                 {
-                    foreach (Stone s in ReCheckGroupOfStone(boardStone[stone.x - 1, stone.y], Direction.left))
+                    foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x + 1, stone.y], Direction.left))
                         stone.groupOfStones.Add(s);
                 }
             }
             catch { }
         }
 
-        public List<Stone> ReCheckGroupOfStone(Stone stone, Direction direct)
+        public List<Stone> ReCheckGroupOfStone(ref Stone stone, Direction direct)
         {
             List<Stone> stones = new List<Stone>();
-            if (direct != Direction.top && stone.state == stone.stateTop)
+
+            if (checkedStones.Contains((stone.x, stone.y)))
+                return stones;
+
+            checkedStones.Add((stone.x, stone.y));
+
+            if (direct != Direction.top && stone.state == stone.stateTop && stone.stateTop != CellState.OutRange)
             {
-                foreach (Stone s in ReCheckGroupOfStone(boardStone[stone.x, stone.y - 1], Direction.bot))
-                    stones.Add(s);
+                try
+                {
+                    foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x, stone.y - 1], Direction.bot))
+                        stones.Add(s);
+                }
+                catch { }
             }
-            if (direct != Direction.bot && stone.state == stone.stateBot)
+            if (direct != Direction.bot && stone.state == stone.stateBot && stone.stateBot != CellState.OutRange)
             {
-                foreach (Stone s in ReCheckGroupOfStone(boardStone[stone.x, stone.y + 1], Direction.top))
-                    stones.Add(s);
+                try
+                {
+                    foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x, stone.y + 1], Direction.top))
+                        stones.Add(s);
+                }
+                catch { }
             }
-            if (direct != Direction.left && stone.state == stone.stateLeft)
+            if (direct != Direction.left && stone.state == stone.stateLeft && stone.stateLeft != CellState.OutRange)
             {
-                foreach (Stone s in ReCheckGroupOfStone(boardStone[stone.x + 1, stone.y], Direction.right))
-                    stones.Add(s);
+                try
+                {
+                    foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x - 1, stone.y], Direction.right))
+                        stones.Add(s);
+                }
+                catch { }
             }
-            if (direct != Direction.right && stone.state == stone.stateRight)
+            if (direct != Direction.right && stone.state == stone.stateRight && stone.stateRight != CellState.OutRange)
             {
-                foreach (Stone s in ReCheckGroupOfStone(boardStone[stone.x - 1, stone.y - 1], Direction.left))
-                    stones.Add(s);
+                try
+                {
+                    foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x + 1, stone.y], Direction.left))
+                        stones.Add(s);
+                }
+                catch { }
             }
             stones.Add(stone);
+            checkedStones.Clear();
             return stones;
         }
 
@@ -173,28 +202,26 @@ namespace GoGame.Models
             {
                 for(int j = 0; j < boardSize; j++)
                 {
-                    СheckWayStone(boardStone[i, j]);
-                    CheckGroupOfStone(boardStone[i, j]);
+                    СheckWayStone(ref boardStone[i, j]);
+                    CheckGroupOfStone(ref boardStone[i, j]);
                 }
             }
         }
 
-        public bool IsGrouoOfStoneOnSuicide(int x, int y, List<Stone> stones)
+        public bool IsGroupOfStoneOnSuicide(ref List<Stone> stones, ref Stone stone, CellState currentMove)
         {
-            boardStone[x, y].state = CellState.White;
+            bool flag = true;
             foreach(Stone s in stones)
             {
-                if(s.stateTop == CellState.Empty 
-                    || s.stateBot == CellState.Empty 
-                    || s.stateLeft == CellState.Empty 
-                    || s.stateRight == CellState.Empty)
+                if(s.stateTop != CellState.Empty 
+                    || s.stateBot != CellState.Empty 
+                    || s.stateLeft != CellState.Empty 
+                    || s.stateRight != CellState.Empty)
                 {
-                    boardStone[x, y].state = CellState.Empty;
-                    return false;
+                    flag = false;
                 }
             }
-            boardStone[x, y].state = CellState.Empty;
-            return true;
+            return flag;
         }
     }
 }

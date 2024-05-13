@@ -82,10 +82,14 @@ namespace GoGame.Models
             }
             else if(board.boardStone[x, y].stateTop == stoneColor)
             {
-                if(board.IsGrouoOfStoneOnSuicide(x, y, board.boardStone[x, y - 1].groupOfStones))
+                if(board.IsGroupOfStoneOnSuicide(ref board.boardStone[x, y - 1].groupOfStones, ref board.boardStone[x, y], stoneColor))
                 {
                     way--;
                 }
+            }
+            else if(board.boardStone[x, y].stateTop == CellState.OutRange)
+            {
+                way--;
             }
             if(board.boardStone[x, y].stateBot != stoneColor && board.boardStone[x, y].stateBot != CellState.Empty && board.boardStone[x, y].stateBot != CellState.OutRange)
             {
@@ -93,32 +97,44 @@ namespace GoGame.Models
             }
             else if(board.boardStone[x, y].stateBot == stoneColor)
             {
-                if (board.IsGrouoOfStoneOnSuicide(x, y, board.boardStone[x, y + 1].groupOfStones))
+                if (board.IsGroupOfStoneOnSuicide(ref board.boardStone[x, y + 1].groupOfStones, ref board.boardStone[x, y], stoneColor))
                 {
                     way--;
                 }
             }
-            if(board.boardStone[x, y].stateLeft != stoneColor && board.boardStone[x, y].stateLeft != CellState.Empty && board.boardStone[x, y].stateLeft != CellState.OutRange)
+            else if (board.boardStone[x, y].stateBot == CellState.OutRange)
+            {
+                way--;
+            }
+            if (board.boardStone[x, y].stateLeft != stoneColor && board.boardStone[x, y].stateLeft != CellState.Empty && board.boardStone[x, y].stateLeft != CellState.OutRange)
             {
                 way--;
             }
             else if(board.boardStone[x, y].stateLeft == stoneColor)
             {
-                if (board.IsGrouoOfStoneOnSuicide(x, y, board.boardStone[x - 1, y].groupOfStones))
+                if (board.IsGroupOfStoneOnSuicide(ref board.boardStone[x - 1, y].groupOfStones, ref board.boardStone[x, y], stoneColor))
                 {
                     way--;
                 }
             }
-            if(board.boardStone[x, y].stateRight != stoneColor && board.boardStone[x, y].stateRight != CellState.Empty && board.boardStone[x, y].stateRight != CellState.OutRange)
+            else if (board.boardStone[x, y].stateLeft == CellState.OutRange)
+            {
+                way--;
+            }
+            if (board.boardStone[x, y].stateRight != stoneColor && board.boardStone[x, y].stateRight != CellState.Empty && board.boardStone[x, y].stateRight != CellState.OutRange)
             {
                 way--;
             }
             else if(board.boardStone[x, y].stateRight == stoneColor)
             {
-                if (board.IsGrouoOfStoneOnSuicide(x, y, board.boardStone[x + 1, y].groupOfStones))
+                if (board.IsGroupOfStoneOnSuicide(ref board.boardStone[x + 1, y].groupOfStones, ref board.boardStone[x, y], stoneColor))
                 {
                     way--;
                 }
+            }
+            else if (board.boardStone[x, y].stateRight == CellState.OutRange)
+            {
+                way--;
             }
             if (way == 0)
                 return true;
