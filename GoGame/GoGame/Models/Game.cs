@@ -82,7 +82,7 @@ namespace GoGame.Models
             }
             else if(board.boardStone[x, y].stateTop == stoneColor)
             {
-                if(board.IsGroupOfStoneOnSuicide(ref board.boardStone[x, y - 1].groupOfStones, ref board.boardStone[x, y], stoneColor))
+                if(board.IsGroupOfStoneOnSuicide(x, y - 1, ref board.boardStone[x, y], stoneColor))
                 {
                     way--;
                 }
@@ -97,7 +97,7 @@ namespace GoGame.Models
             }
             else if(board.boardStone[x, y].stateBot == stoneColor)
             {
-                if (board.IsGroupOfStoneOnSuicide(ref board.boardStone[x, y + 1].groupOfStones, ref board.boardStone[x, y], stoneColor))
+                if (board.IsGroupOfStoneOnSuicide(x, y + 1, ref board.boardStone[x, y], stoneColor))
                 {
                     way--;
                 }
@@ -112,7 +112,7 @@ namespace GoGame.Models
             }
             else if(board.boardStone[x, y].stateLeft == stoneColor)
             {
-                if (board.IsGroupOfStoneOnSuicide(ref board.boardStone[x - 1, y].groupOfStones, ref board.boardStone[x, y], stoneColor))
+                if (board.IsGroupOfStoneOnSuicide(x - 1, y, ref board.boardStone[x, y], stoneColor))
                 {
                     way--;
                 }
@@ -127,7 +127,7 @@ namespace GoGame.Models
             }
             else if(board.boardStone[x, y].stateRight == stoneColor)
             {
-                if (board.IsGroupOfStoneOnSuicide(ref board.boardStone[x + 1, y].groupOfStones, ref board.boardStone[x, y], stoneColor))
+                if (board.IsGroupOfStoneOnSuicide(x + 1, y, ref board.boardStone[x, y], stoneColor))
                 {
                     way--;
                 }

@@ -83,31 +83,33 @@ namespace GoGame.Models
 
         public void СheckWayStone(ref Stone stone)
         {
-            try
+            if(stone.y != 0)
             {
                 stone.stateTop = boardStone[stone.x, stone.y-1].state;
             }
-            catch { stone.stateTop = CellState.OutRange; }
-            try
+            else { stone.stateTop = CellState.OutRange; }
+            if(stone.y !=  boardSize - 1)
             {
                 stone.stateBot = boardStone[stone.x, stone.y + 1].state;
             }
-            catch { stone.stateBot = CellState.OutRange; }
-            try
+            else { stone.stateBot = CellState.OutRange; }
+            if (stone.x != 0)
             {
                 stone.stateLeft = boardStone[stone.x-1, stone.y].state;
             }
-            catch { stone.stateLeft = CellState.OutRange; }
-            try
+            else { stone.stateLeft = CellState.OutRange; }
+            if(stone.x != boardSize - 1)
             {
                 stone.stateRight = boardStone[stone.x+1, stone.y].state;
             }
-            catch { stone.stateRight = CellState.OutRange; }
+            else{ stone.stateRight = CellState.OutRange; }
         }
 
         public void CheckGroupOfStone(ref Stone stone)
-        {           
-            try
+        {
+            if (stone.state == CellState.White || stone.state == CellState.Black)
+                stone.groupOfStones.Add(stone);
+            if (stone.y != 0)
             {
                 if (stone.state != CellState.Empty && stone.state == stone.stateTop)
                 {
@@ -116,11 +118,9 @@ namespace GoGame.Models
                         if(!stone.groupOfStones.Contains(s))
                             stone.groupOfStones.Add(s);
                     }
-                    varStones.Clear();
                 }
             }
-            catch { }
-            try
+            if (stone.y != boardSize - 1)
             {
                 if (stone.state != CellState.Empty && stone.state == stone.stateBot)
                 {
@@ -129,11 +129,9 @@ namespace GoGame.Models
                         if (!stone.groupOfStones.Contains(s))
                             stone.groupOfStones.Add(s);
                     }
-                    varStones.Clear();
                 }
             }
-            catch { }
-            try
+            if (stone.x != 0)
             {
                 if (stone.state != CellState.Empty && stone.state == stone.stateLeft)
                 {
@@ -142,11 +140,9 @@ namespace GoGame.Models
                         if (!stone.groupOfStones.Contains(s))
                             stone.groupOfStones.Add(s);
                     }
-                    varStones.Clear();
                 }
             }
-            catch { }
-            try
+            if (stone.x != boardSize - 1)
             {
                 if (stone.state != CellState.Empty && stone.state == stone.stateRight)
                 {
@@ -155,10 +151,9 @@ namespace GoGame.Models
                         if (!stone.groupOfStones.Contains(s))
                             stone.groupOfStones.Add(s);
                     }
-                    varStones.Clear();
                 }
             }
-            catch { }
+            varStones.Clear();
         }
 
         public List<Stone> ReCheckGroupOfStone(ref Stone stone)
@@ -173,39 +168,35 @@ namespace GoGame.Models
 
             if (stone.state == stone.stateTop && stone.stateTop != CellState.OutRange)
             {
-                try
+                if (stone.y != 0)
                 {
                     foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x, stone.y - 1]))
                         stones.Add(s);
                 }
-                catch { }
             }
             if (stone.state == stone.stateBot && stone.stateBot != CellState.OutRange)
             {
-                try
+                if (stone.y != boardSize)
                 {
                     foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x, stone.y + 1]))
                         stones.Add(s);
                 }
-                catch { }
             }
             if (stone.state == stone.stateLeft && stone.stateLeft != CellState.OutRange)
             {
-                try
+                if (stone.x != 0)
                 {
                     foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x - 1, stone.y]))
                         stones.Add(s);
                 }
-                catch { }
             }
             if (stone.state == stone.stateRight && stone.stateRight != CellState.OutRange)
             {
-                try
+                if (stone.x != boardSize)
                 {
                     foreach (Stone s in ReCheckGroupOfStone(ref boardStone[stone.x + 1, stone.y]))
                         stones.Add(s);
                 }
-                catch { }
             }                        
             return stones;
         }
@@ -218,17 +209,23 @@ namespace GoGame.Models
                 {
                     СheckWayStone(ref boardStone[i, j]);
                     boardStone[i, j].groupOfStones.Clear();
+                }
+            }
+            for (int i = 0; i < boardSize; i++)
+            {
+                for (int j = 0; j < boardSize; j++)
+                {
                     CheckGroupOfStone(ref boardStone[i, j]);
                 }
             }
         }
 
-        public bool IsGroupOfStoneOnSuicide(ref List<Stone> stones, ref Stone stone, CellState currentMove)
+        public bool IsGroupOfStoneOnSuicide(int x, int y, ref Stone stone, CellState currentMove)
         {
             bool flag = true;
             boardStone[stone.x, stone.y].state = currentMove;
             UpdateBordStons();
-            foreach(Stone s in stones)
+            foreach (Stone s in boardStone[x, y].groupOfStones)
             {
                 if(s.stateTop == CellState.Empty 
                     || s.stateBot == CellState.Empty 
