@@ -63,7 +63,7 @@ namespace GoGame
                 currentPlayer.Content = "Player1";
             }
             ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.Black : Brushes.White;
-            UpdateLayout();
+            contentControl.InvalidateVisual();
         }
 
         private void NewGameButton_ClickToStartNewGame(object sender, RoutedEventArgs e)
@@ -122,12 +122,16 @@ namespace GoGame
         {
             _game = null;
             _game = undoRedoService.UndoMove();
+            contentControl.Content = _game.gameBoard;
+            ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
         }
 
         private void ReDo_Click(object sender, RoutedEventArgs e)
         {
             _game = null;
             _game = undoRedoService.RedoMove();
+            contentControl.Content = _game.gameBoard;
+            ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
         }
     }
 }

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GoGame.Models;
+using GoGame.Services;
 
 namespace GoGame.Views
 {
@@ -32,6 +33,7 @@ namespace GoGame.Views
 
         private void FillGridWithBorders()
         {
+
             // Заполняем каждую ячейку Grid элементом Border с черной границей
             for (int row = 0; row < 8; row++)
             {
@@ -91,7 +93,8 @@ namespace GoGame.Views
                 game.board.boardStone[col, row].state = game.currentMove;               
                 ellipse.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
                 game.board.UpdateBordStons();
-                game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White; 
+                game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White;
+                InvalidateVisual();
                 //MessageBox.Show($"Button clicked: x:{col} y:{row}");
             }
             else

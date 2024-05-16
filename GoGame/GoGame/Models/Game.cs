@@ -83,9 +83,9 @@ namespace GoGame.Models
                     board.boardStone[s.x, s.y].state = CellState.Empty;
                     foreach(Object child in gameBoard.gridBoardBig.Children)
                     {
-                        if(child is Ellipse ellip && child is FrameworkElement frameworkElement)
+                        if(child is Ellipse ellip)
                         {
-                            string[] nameParts = frameworkElement.Name.Split('_');
+                            string[] nameParts = ellip.Name.Split('_');
                             if (nameParts.Length == 3 && nameParts[0] == "ellipse")
                             {
                                 if (int.TryParse(nameParts[1], out int ellipseX) && int.TryParse(nameParts[2], out int ellipseY))
