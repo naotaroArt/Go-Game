@@ -35,6 +35,17 @@ namespace GoGame.Models
             scoreBlack = 0;
         }
 
+        ~Game()
+        {
+            board = null;
+            currentMove = playr1;
+            gameBoard = null;
+            mainWindow = null;
+            scoreWhite = 0;
+            scoreBlack = 0;
+            ChangingCurrentMove = null;
+        }
+
         public bool IsMoveValid(int x, int y, CellState stoneColor)
         {
             // Проверка на пустую клетку

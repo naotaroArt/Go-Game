@@ -67,5 +67,15 @@ namespace GoGame
             }
 
         }
+
+        private void NewGameButton_ClickToStartNewGame(object sender, RoutedEventArgs e)
+        {
+            _game = null;
+            _game = new Game(this);
+            _game.ChangingCurrentMove += ChangingScore;
+            _game.ChangingCurrentMove += ChangingCurrentPlayer;
+            ChangingScore();
+            ellipseCurrentMove.Fill = Brushes.White;
+        }
     }
 }
