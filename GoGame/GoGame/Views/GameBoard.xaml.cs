@@ -24,13 +24,13 @@ namespace GoGame.Views
     /// </summary>
     public partial class GameBoard : UserControl
     {
-        private Game game; 
+        private Game _game; 
         internal GameBoard(Game game)
         {
             InitializeComponent();
             FillGridWithBorders();
             FillGridWithEllipse();
-            this.game = game;
+            this._game = game;
         }
 
         private void FillGridWithBorders()
@@ -104,12 +104,12 @@ namespace GoGame.Views
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
             int col = Grid.GetColumn(ellipse);
-            if (game.board.boardStone[col, row].state == CellState.Empty && game.IsMoveValid(col, row, game.currentMove))
+            if (_game.board.boardStone[col, row].state == CellState.Empty && _game.IsMoveValid(col, row, _game.currentMove))
             {
-                game.board.boardStone[col, row].state = game.currentMove;               
-                ellipse.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
-                game.board.UpdateBordStons();
-                game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White;
+                _game.board.boardStone[col, row].state = _game.currentMove;               
+                ellipse.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+                _game.board.UpdateBordStons();
+                _game.currentMove = _game.currentMove == CellState.White ? CellState.Black : CellState.White;
                 InvalidateVisual();
                 //MessageBox.Show($"Button clicked: x:{col} y:{row}");
             }
@@ -124,11 +124,11 @@ namespace GoGame.Views
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
             int col = Grid.GetColumn(ellipse);      
-            if (game.board.boardStone[col, row].state != CellState.Empty)
+            if (_game.board.boardStone[col, row].state != CellState.Empty)
                 return;          
             if (ellipse != null)
             {
-                if(game.currentMove == CellState.White)
+                if(_game.currentMove == CellState.White)
                     ellipse.Fill = new SolidColorBrush(Color.FromArgb(128, 255, 255, 255));
                 else
                     ellipse.Fill = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
@@ -140,7 +140,7 @@ namespace GoGame.Views
             Ellipse ellipse = sender as Ellipse;
             int row = Grid.GetRow(ellipse);
             int col = Grid.GetColumn(ellipse);
-            if (game.board.boardStone[col, row].state != CellState.Empty)
+            if (_game.board.boardStone[col, row].state != CellState.Empty)
                 return;           
             ellipse.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         }  

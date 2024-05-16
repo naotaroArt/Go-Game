@@ -90,17 +90,29 @@ namespace GoGame
 
         private void SelectingBoardSize9x9_Checked(object sender, RoutedEventArgs e)
         {
+            _game = null;
             GameSettings.BoardSize = 9;
+            InitializeGame();
+            undoRedoService = null;
+            undoRedoService = new UndoRedoService();
         }
 
         private void SelectingBoardSize13x13_Checked(object sender, RoutedEventArgs e)
         {
+            _game = null;
             GameSettings.BoardSize = 13;
+            InitializeGame();
+            undoRedoService = null;
+            undoRedoService = new UndoRedoService();
         }
 
         private void SelectingBoardSize19x19_Checked(object sender, RoutedEventArgs e)
         {
+            _game = null;
             GameSettings.BoardSize = 19;
+            InitializeGame();
+            undoRedoService = null;
+            undoRedoService = new UndoRedoService();
         }
 
         private void InitializeGame()

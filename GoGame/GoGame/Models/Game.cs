@@ -23,6 +23,7 @@ namespace GoGame.Models
         public int scoreBlack;
         public bool endGame;
         public int numberOfPasses;
+        public int countMove;
 
         public delegate void MyDelegate();
         public event MyDelegate ChangingCurrentMove;
@@ -36,6 +37,7 @@ namespace GoGame.Models
             scoreBlack = 0;
             endGame = false;
             numberOfPasses = 0;
+            countMove = 0;
         }
 
         public Game(GameBoard gameBoard, Board board)
@@ -47,6 +49,7 @@ namespace GoGame.Models
             scoreBlack = 0;
             endGame = false;
             numberOfPasses = 0;
+            countMove = 0;
         }
 
         ~Game()
@@ -57,6 +60,9 @@ namespace GoGame.Models
             scoreWhite = 0;
             scoreBlack = 0;
             ChangingCurrentMove = null;
+            endGame = false;
+            numberOfPasses = 0;
+            countMove = 0;
         }
         public object Clone() => new Game(new GameBoard(this), new Board());
 
@@ -100,6 +106,7 @@ namespace GoGame.Models
                     }
                 }
             }
+            countMove++;
             capturedStones.Clear();
             ChangingCurrentMove?.Invoke();
             return true;
@@ -197,6 +204,7 @@ namespace GoGame.Models
         private bool IsKo(int x, int y, CellState stoneColor)
         {
             // TODO: Реализовать проверку на запрет хода (ко рку)
+
             return false;
         }
 
