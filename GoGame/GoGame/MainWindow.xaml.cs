@@ -78,6 +78,7 @@ namespace GoGame
         {
             if (_game.numberOfPasses == 2)
                 _game.endGame = true;
+            ChangingCurrentPlayer();
             _game.currentMove = _game.currentMove == CellState.White ? CellState.Black : CellState.White;
             _game.numberOfPasses++;
         }
@@ -106,6 +107,7 @@ namespace GoGame
         {
             _game = new Game();
             contentControl.Content = _game.gameBoard;
+            currentPlayer.Content = "Player1";
             ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
             _game.ChangingCurrentMove += ChangingScore;
             _game.ChangingCurrentMove += ChangingCurrentPlayer;

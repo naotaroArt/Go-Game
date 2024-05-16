@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GoGame.AppSettings;
 using GoGame.Models;
 using GoGame.Services;
 
@@ -33,11 +35,15 @@ namespace GoGame.Views
 
         private void FillGridWithBorders()
         {
-
-            // Заполняем каждую ячейку Grid элементом Border с черной границей
-            for (int row = 0; row < 8; row++)
+            for (int i = 0; i < GameSettings.BoardSize - 1; i++)
             {
-                for (int col = 0; col < 8; col++)
+                gridBoard.RowDefinitions.Add(new RowDefinition());
+                gridBoard.ColumnDefinitions.Add(new ColumnDefinition());
+            }
+            // Заполняем каждую ячейку Grid элементом Border с черной границей
+            for (int row = 0; row < GameSettings.BoardSize - 1; row++)
+            {
+                for (int col = 0; col < GameSettings.BoardSize - 1; col++)
                 {
                     Border border = new Border
                     {
@@ -55,16 +61,26 @@ namespace GoGame.Views
 
         private void FillGridWithEllipse()
         {
-            // Заполняем каждую ячейку Grid кнопкой
-            for (int row = 0; row < 9; row++)
+            Grid.SetColumnSpan(gridBoard, GameSettings.BoardSize);
+            Grid.SetRowSpan(gridBoard, GameSettings.BoardSize);
+            gameBoard.Height = GameSettings.BoardSize * 50 + 10;
+            gameBoard.Width = GameSettings.BoardSize * 50 + 10;
+            gridBoard.Margin = new Thickness(25);
+            for (int i = 0; i < GameSettings.BoardSize; i++)
             {
-                for (int col = 0; col < 9; col++)
+                gridBoardBig.RowDefinitions.Add(new RowDefinition());
+                gridBoardBig.ColumnDefinitions.Add(new ColumnDefinition());
+            }
+            // Заполняем каждую ячейку Grid
+            for (int row = 0; row < GameSettings.BoardSize; row++)
+            {
+                for (int col = 0; col < GameSettings.BoardSize; col++)
                 {
                     Ellipse ellipse = new Ellipse
                     {
                         Name = $"ellipse_{row}_{col}",
-                        Width = 40,
-                        Height = 40,
+                        Width = ((gameBoard.Width - 10) / (GameSettings.BoardSize + 1)) - 5,
+                        Height = ((gameBoard.Height - 10) / (GameSettings.BoardSize + 1)) - 5,
                         Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)), // Полупрозрачный цвет
                     };
 

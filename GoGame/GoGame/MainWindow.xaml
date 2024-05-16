@@ -12,7 +12,7 @@
             <ColumnDefinition Width="500*"></ColumnDefinition>
             <ColumnDefinition Width="300*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ContentControl Grid.Column="0" x:Name="contentControl" Width="460" Height="460"/>
+        <ContentControl Grid.Column="0" x:Name="contentControl" Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <StackPanel Grid.Column="1" Background="Khaki">
             <Grid Margin="10 10 10 10" Background="Orange">
                 <Grid.ColumnDefinitions>
