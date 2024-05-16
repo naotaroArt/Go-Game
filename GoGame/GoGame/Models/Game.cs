@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using GoGame.Views;
 
 namespace GoGame.Models
 {
@@ -12,18 +16,23 @@ namespace GoGame.Models
         public static CellState playr1 = CellState.White;
         public static CellState playr2 = CellState.Black;
         public CellState currentMove;
-        public Views.GameBoard gameBoard;
+        public GameBoard gameBoard;
         public MainWindow mainWindow;
-        public int[] score;
+        public int scoreWhite;
+        public int scoreBlack;
+
+        public delegate void MyDelegate();
+        public event MyDelegate ChangingCurrentMove;
 
         public Game(MainWindow mainWindow)
         {
             board = new Board();
             currentMove = playr1;
-            gameBoard = new Views.GameBoard(this);
+            gameBoard = new GameBoard(this);
             mainWindow.contentControl.Content = gameBoard;
             this.mainWindow = mainWindow;
-            score = new int[2] { 0, 0 };
+            scoreWhite = 0;
+            scoreBlack = 0;
         }
 
         public bool IsMoveValid(int x, int y, CellState stoneColor)
@@ -36,21 +45,38 @@ namespace GoGame.Models
             if (IsSuicide(x, y, stoneColor))
                 return false;
 
-            // Проверка на захват камней противника
-            List<(int, int)> capturedStones = GetCapturedStones(x, y, stoneColor);
-            if (capturedStones.Count > 0)
-            {
-                foreach (var (capturedX, capturedY) in capturedStones)
-                {
-                    board.boardStone[capturedX, capturedY].state = CellState.Empty;
-                }
-                return true;
-            }
-
             // Проверка на запрет хода (ко рку)
             if (IsKo(x, y, stoneColor))
                 return false;
 
+            // Проверка на захват камней противника
+            List<Stone> capturedStones = GetCapturedStones(x, y, stoneColor);
+            if (capturedStones.Count > 0)
+            {
+                foreach (Stone s in capturedStones)
+                {
+                    board.boardStone[s.x, s.y].state = CellState.Empty;
+                    foreach(Object child in gameBoard.gridBoardBig.Children)
+                    {
+                        if(child is Ellipse ellip && child is FrameworkElement frameworkElement)
+                        {
+                            string[] nameParts = frameworkElement.Name.Split('_');
+                            if (nameParts.Length == 3 && nameParts[0] == "ellipse")
+                            {
+                                if (int.TryParse(nameParts[1], out int ellipseX) && int.TryParse(nameParts[2], out int ellipseY))
+                                {
+                                    if (ellipseX == s.x && ellipseY == s.y)
+                                    {                                        
+                                        ellip.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            capturedStones.Clear();
+            ChangingCurrentMove?.Invoke();
             return true;
         }
 
@@ -60,11 +86,87 @@ namespace GoGame.Models
             return ReChekIsSuicide(x,y,stoneColor);
         }
 
-        private List<(int, int)> GetCapturedStones(int x, int y, CellState stoneColor)
+        private List<Stone> GetCapturedStones(int x, int y, CellState stoneColor)
         {
-            List<(int, int)> list = new List<(int, int)>();
+            List<Stone> stones = new List<Stone>();
             // TODO: Реализовать проверку на захват камней противника
-            return list;
+            if (board.boardStone[x, y].stateTop != stoneColor && board.boardStone[x, y].stateTop != CellState.Empty && board.boardStone[x, y].stateTop != CellState.OutRange)
+            {
+                if (board.IsGroupOfStoneOnSuicide(x, y - 1, ref board.boardStone[x, y], stoneColor))
+                {
+                    foreach(Stone s in board.boardStone[x, y - 1].groupOfStones)
+                    {
+                        stones.Add(s);
+                        board.boardStone[s.x, s.y].state = CellState.Empty;
+                        if(currentMove == CellState.White)
+                        {
+                            scoreWhite++;
+                        }
+                        else
+                        {
+                            scoreBlack++;
+                        }
+                    }
+                }
+            }
+            if (board.boardStone[x, y].stateBot != stoneColor && board.boardStone[x, y].stateBot != CellState.Empty && board.boardStone[x, y].stateBot != CellState.OutRange)
+            {
+                if (board.IsGroupOfStoneOnSuicide(x, y + 1, ref board.boardStone[x, y], stoneColor))
+                {
+                    foreach (Stone s in board.boardStone[x, y + 1].groupOfStones)
+                    {
+                        stones.Add(s);
+                        board.boardStone[s.x, s.y].state = CellState.Empty;
+                        if (currentMove == CellState.White)
+                        {
+                            scoreWhite++;
+                        }
+                        else
+                        {
+                            scoreBlack++;
+                        }
+                    }
+                }
+            }
+            if (board.boardStone[x, y].stateLeft != stoneColor && board.boardStone[x, y].stateLeft != CellState.Empty && board.boardStone[x, y].stateLeft != CellState.OutRange)
+            {
+                if (board.IsGroupOfStoneOnSuicide(x - 1, y, ref board.boardStone[x, y], stoneColor))
+                {
+                    foreach (Stone s in board.boardStone[x - 1, y].groupOfStones)
+                    {
+                        stones.Add(s);
+                        board.boardStone[s.x, s.y].state = CellState.Empty;
+                        if (currentMove == CellState.White)
+                        {
+                            scoreWhite++;
+                        }
+                        else
+                        {
+                            scoreBlack++;
+                        }
+                    }
+                }
+            }
+            if (board.boardStone[x, y].stateRight != stoneColor && board.boardStone[x, y].stateRight != CellState.Empty && board.boardStone[x, y].stateRight != CellState.OutRange)
+            {
+                if (board.IsGroupOfStoneOnSuicide(x + 1, y, ref board.boardStone[x, y], stoneColor))
+                {
+                    foreach (Stone s in board.boardStone[x + 1, y].groupOfStones)
+                    {
+                        stones.Add(s);
+                        board.boardStone[s.x, s.y].state = CellState.Empty;
+                        if (currentMove == CellState.White)
+                        {
+                            scoreWhite++;
+                        }
+                        else
+                        {
+                            scoreBlack++;
+                        }
+                    }
+                }
+            }
+            return stones;
         }
 
         private bool IsKo(int x, int y, CellState stoneColor)

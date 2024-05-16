@@ -14,9 +14,37 @@
         </Grid.ColumnDefinitions>
         <ContentControl Grid.Column="0" x:Name="contentControl" Width="460" Height="460"/>
         <StackPanel Grid.Column="1">
-            <Label Content="Current Move"/>
-            <Ellipse x:Name="ellipseCurrentMove" Width="50" Height="50" StrokeThickness="1" Stroke="Black" HorizontalAlignment="Left">
-            </Ellipse>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="300*"></ColumnDefinition>
+                    <ColumnDefinition Width="300*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20*"></RowDefinition>
+                    <RowDefinition Height="50*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="2">
+                    <Label Grid.Column="0" Grid.Row="0" Content="Current Move:" FontSize="16"/>
+                </Border>
+                <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="2">
+                    <Ellipse Grid.Column="0" Grid.Row="1" x:Name="ellipseCurrentMove" Width="50" Height="50" StrokeThickness="1" Stroke="Black" HorizontalAlignment="Left"/>
+                </Border>
+                <Label x:Name="currentPlayer" Grid.Column="1" Grid.Row="1" Content="Player1" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                <Border Grid.Column="2" Grid.Row="0" BorderBrush="Black" BorderThickness="2">
+                    <Label Grid.Column="1" Grid.Row="0" Content="Player 1" FontSize="16"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="0" BorderBrush="Black" BorderThickness="2">
+                    <Label Grid.Column="2" Grid.Row="0" Content="Player 2" FontSize="16"/>
+                </Border>
+                <Border Grid.Column="2" Grid.Row="1" BorderBrush="Black" BorderThickness="2">
+                    <Label x:Name="scorePlayer1" Grid.Column="1" Grid.Row="1" Content="Score: 0" FontSize="16"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="1" BorderBrush="Black" BorderThickness="2">
+                    <Label x:Name="scorePlayer2" Grid.Column="2" Grid.Row="1" Content="Score: 0" FontSize="16"/>
+                </Border>
+            </Grid>
             <Button x:Name="SaveButton" Content="Save Game" Width="100" Height="50" HorizontalAlignment="Left" Margin="5 5 5 5" Click="SaveButton_Click"></Button>
             <Button x:Name="LoadButton" Content="Load Game" Width="100" Height="50" HorizontalAlignment="Left" Margin="5 5 5 5" Click="LoadButton_Click"></Button>
         </StackPanel>

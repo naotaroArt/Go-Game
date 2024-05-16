@@ -27,7 +27,6 @@ namespace GoGame.Models
     {
         public int boardSize;
         public Stone[,] boardStone;
-        List<(int, int)> checkedStones;
         List<Stone> varStones;
 
         public Board()
@@ -230,6 +229,26 @@ namespace GoGame.Models
                 if(s.stateTop == CellState.Empty 
                     || s.stateBot == CellState.Empty 
                     || s.stateLeft == CellState.Empty 
+                    || s.stateRight == CellState.Empty)
+                {
+                    flag = false;
+                }
+            }
+            boardStone[stone.x, stone.y].state = CellState.Empty;
+            UpdateBordStons();
+            return flag;
+        }
+
+        public bool IsGroupOfStoneOnCaptured(int x, int y, ref Stone stone, CellState currentMove)
+        {
+            bool flag = true;
+            boardStone[stone.x, stone.y].state = currentMove;
+            UpdateBordStons();
+            foreach (Stone s in boardStone[x, y].groupOfStones)
+            {
+                if (s.stateTop == CellState.Empty
+                    || s.stateBot == CellState.Empty
+                    || s.stateLeft == CellState.Empty
                     || s.stateRight == CellState.Empty)
                 {
                     flag = false;
