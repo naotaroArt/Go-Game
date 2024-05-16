@@ -57,10 +57,16 @@
                     <RowDefinition Height="2*"></RowDefinition>
                     <RowDefinition Height="2*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0" x:Name="Pass" Grid.ColumnSpan="2" Content="Pass" Width="100" Height="50" HorizontalAlignment="Center" Margin="5 10 5 5" Panel.ZIndex="1"></Button>
-                <Button Grid.Row="1" x:Name="UnDo" Content="Undo" Width="80" Height="50" HorizontalAlignment="Right" Margin="5 5 10 5" Panel.ZIndex="1"></Button>
-                <Button Grid.Row="1" Grid.Column="1" x:Name="ReDo" Content="Redo" Width="80" Height="50" HorizontalAlignment="Left" Margin="10 5 5 5" Panel.ZIndex="1"></Button>
-                <Button Grid.Row="2" x:Name="NewGameButton" Grid.ColumnSpan="2" Content="New Game" Width="100" Height="50" HorizontalAlignment="Center" Margin="5 5 5 5" Panel.ZIndex="1" Click="NewGameButton_ClickToStartNewGame"></Button>
+                <Button Grid.Row="0" x:Name="Pass" Grid.ColumnSpan="2" Content="Pass" Width="100" Height="50" HorizontalAlignment="Center" Margin="5 10 5 5" Panel.ZIndex="1" Click="Pass_Click"></Button>
+                <Button Grid.Row="1" x:Name="UnDo" Content="Undo" Width="80" Height="50" HorizontalAlignment="Right" Margin="5 5 10 5" Panel.ZIndex="1" Click="UnDo_Click"></Button>
+                <Button Grid.Row="1" Grid.Column="1" x:Name="ReDo" Content="Redo" Width="80" Height="50" HorizontalAlignment="Left" Margin="10 5 5 5" Panel.ZIndex="1" Click="ReDo_Click"></Button>
+                <Button Grid.Row="2" x:Name="NewGameButton" Content="New Game" Width="80" Height="50" HorizontalAlignment="Right" Margin="5 5 10 5" Panel.ZIndex="1" Click="NewGameButton_ClickToStartNewGame"></Button>
+                <RadioButton Grid.Row="2" Grid.Column="1" GroupName="BoardSize" Panel.ZIndex="1" x:Name="SelectingBoardSize9x9" Margin="5 5 60 5" HorizontalAlignment="Left" IsChecked="True" Checked="SelectingBoardSize9x9_Checked"></RadioButton>
+                <Label Grid.Row="2" Grid.Column="1" Content="9x9" Panel.ZIndex="1" x:Name="LbBoaedSize9x9" Margin="20 0 60 5" HorizontalAlignment="Left"></Label>
+                <RadioButton Grid.Row="2" Grid.Column="1" GroupName="BoardSize" Panel.ZIndex="1" x:Name="SelectingBoardSize13x13" Margin="5 25 60 5" HorizontalAlignment="Left" Checked="SelectingBoardSize13x13_Checked"></RadioButton>
+                <Label Grid.Row="2" Grid.Column="1" Content="13x13" Panel.ZIndex="1" x:Name="LbBoaedSize13x13" Margin="20 20 60 5" HorizontalAlignment="Left"></Label>
+                <RadioButton Grid.Row="2" Grid.Column="1" GroupName="BoardSize" Panel.ZIndex="1" x:Name="SelectingBoardSize19x19" Margin="5 45 60 5" HorizontalAlignment="Left" Checked="SelectingBoardSize19x19_Checked"></RadioButton>
+                <Label Grid.Row="2" Grid.Column="1" Content="19x19" Panel.ZIndex="1" x:Name="LbBoaedSize19x19" Margin="20 40 60 5" HorizontalAlignment="Left"></Label>
                 <Button Grid.Row="3" x:Name="SaveButton" Grid.ColumnSpan="2" Content="Save Game" Width="100" Height="50" HorizontalAlignment="Center" Margin="5 5 5 5" Panel.ZIndex="1" Click="SaveButton_Click"></Button>
                 <Button Grid.Row="4" x:Name="LoadButton" Grid.ColumnSpan="2" Content="Load Game" Width="100" Height="50" HorizontalAlignment="Center" Margin="5 5 5 10" Panel.ZIndex="1" Click="LoadButton_Click"></Button>
                 <Rectangle Fill="Orange" Margin="50 0 50 0" Panel.ZIndex="0" Grid.RowSpan="5" Grid.ColumnSpan="2" Stroke="Black" StrokeThickness="2"/>

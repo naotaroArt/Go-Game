@@ -16,6 +16,7 @@ using GoGame.Models;
 using GoGame.AppSettings;
 using GoGame.Services;
 using System.Runtime.CompilerServices;
+using GoGame.Views;
 
 namespace GoGame
 {
@@ -25,28 +26,24 @@ namespace GoGame
     public partial class MainWindow : Window
     {
         private Game _game;
-        private static GameSettings _gameSetting;
-        private SerializationService _serializationService;        
+        private UndoRedoService undoRedoService;
 
         public MainWindow()
         {
             InitializeComponent();
-            _gameSetting = new GameSettings();
-            _game = new Game(this);
-            ellipseCurrentMove.Fill = Brushes.White;
-            _serializationService = new SerializationService();
-            _game.ChangingCurrentMove += ChangingScore;
-            _game.ChangingCurrentMove += ChangingCurrentPlayer;
+            InitializeGame();
+            undoRedoService = new UndoRedoService();       
         }       
 
         public void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            _serializationService.SaveGame(_game);
+            SerializationService.SaveGame(_game);
         }
 
         public void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            _game = _serializationService.LoadGame();
+            _game = null;
+            _game = SerializationService.LoadGame();
         }
 
         public void ChangingScore()
@@ -65,17 +62,72 @@ namespace GoGame
             {
                 currentPlayer.Content = "Player1";
             }
-
+            ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.Black : Brushes.White;
+            UpdateLayout();
         }
 
         private void NewGameButton_ClickToStartNewGame(object sender, RoutedEventArgs e)
         {
             _game = null;
-            _game = new Game(this);
+            InitializeGame();
+            undoRedoService = null;
+            undoRedoService = new UndoRedoService();
+        }
+
+        private void Pass_Click(object sender, RoutedEventArgs e)
+        {
+            if (_game.numberOfPasses == 2)
+                _game.endGame = true;
+            _game.currentMove = _game.currentMove == CellState.White ? CellState.Black : CellState.White;
+            _game.numberOfPasses++;
+        }
+
+        private void PassReset()
+        {
+            _game.numberOfPasses = 0;
+        }
+
+        private void SelectingBoardSize9x9_Checked(object sender, RoutedEventArgs e)
+        {
+            GameSettings.BoardSize = 9;
+        }
+
+        private void SelectingBoardSize13x13_Checked(object sender, RoutedEventArgs e)
+        {
+            GameSettings.BoardSize = 13;
+        }
+
+        private void SelectingBoardSize19x19_Checked(object sender, RoutedEventArgs e)
+        {
+            GameSettings.BoardSize = 19;
+        }
+
+        private void InitializeGame()
+        {
+            _game = new Game();
+            contentControl.Content = _game.gameBoard;
+            ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
             _game.ChangingCurrentMove += ChangingScore;
             _game.ChangingCurrentMove += ChangingCurrentPlayer;
-            ChangingScore();
-            ellipseCurrentMove.Fill = Brushes.White;
+            _game.ChangingCurrentMove += PassReset;
+            _game.ChangingCurrentMove += PushInStack;           
+        }
+
+        private void PushInStack()
+        {
+            undoRedoService.AddMove(_game);
+        }
+
+        private void UnDo_Click(object sender, RoutedEventArgs e)
+        {
+            _game = null;
+            _game = undoRedoService.UndoMove();
+        }
+
+        private void ReDo_Click(object sender, RoutedEventArgs e)
+        {
+            _game = null;
+            _game = undoRedoService.RedoMove();
         }
     }
 }

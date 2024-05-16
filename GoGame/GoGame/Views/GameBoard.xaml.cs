@@ -92,7 +92,6 @@ namespace GoGame.Views
                 ellipse.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
                 game.board.UpdateBordStons();
                 game.currentMove = game.currentMove == CellState.White ? CellState.Black : CellState.White; 
-                game.mainWindow.ellipseCurrentMove.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
                 //MessageBox.Show($"Button clicked: x:{col} y:{row}");
             }
             else

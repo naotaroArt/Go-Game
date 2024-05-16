@@ -20,7 +20,9 @@ namespace GoGame.Services
 
         public void AddMove(Game game)
         {
-            _undoStack.Push(game);
+            Game game1 = (Game)game.Clone();
+
+            _undoStack.Push(game1);
             _redoStack.Clear(); // Очищаем стек переходов назад, когда добавляем новый ход
         }
 

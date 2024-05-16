@@ -9,9 +9,9 @@ using System.IO;
 
 namespace GoGame.Services
 {
-    internal class SerializationService
+    internal static class SerializationService
     {
-        public void SaveGame(Game game)
+        public static void SaveGame(Game game)
         {
             // Открываем диалоговое окно сохранения файла
             Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog();
@@ -26,7 +26,7 @@ namespace GoGame.Services
             }
         }
 
-        public Game LoadGame()
+        public static Game LoadGame()
         {
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
             openFileDialog.Filter = "Файлы сохранения (*.json)|*.json|Все файлы (*.*)|*.*";

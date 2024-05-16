@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 using GoGame.Views;
 
 namespace GoGame.Models
@@ -17,22 +19,34 @@ namespace GoGame.Models
         public static CellState playr2 = CellState.Black;
         public CellState currentMove;
         public GameBoard gameBoard;
-        public MainWindow mainWindow;
         public int scoreWhite;
         public int scoreBlack;
+        public bool endGame;
+        public int numberOfPasses;
 
         public delegate void MyDelegate();
         public event MyDelegate ChangingCurrentMove;
 
-        public Game(MainWindow mainWindow)
+        public Game()
         {
             board = new Board();
             currentMove = playr1;
             gameBoard = new GameBoard(this);
-            mainWindow.contentControl.Content = gameBoard;
-            this.mainWindow = mainWindow;
             scoreWhite = 0;
             scoreBlack = 0;
+            endGame = false;
+            numberOfPasses = 0;
+        }
+
+        public Game(GameBoard gameBoard, Board board)
+        {
+            this.board = board;
+            currentMove = playr1;
+            this.gameBoard = gameBoard;
+            scoreWhite = 0;
+            scoreBlack = 0;
+            endGame = false;
+            numberOfPasses = 0;
         }
 
         ~Game()
@@ -40,11 +54,11 @@ namespace GoGame.Models
             board = null;
             currentMove = playr1;
             gameBoard = null;
-            mainWindow = null;
             scoreWhite = 0;
             scoreBlack = 0;
             ChangingCurrentMove = null;
         }
+        public object Clone() => new Game(new GameBoard(this), new Board());
 
         public bool IsMoveValid(int x, int y, CellState stoneColor)
         {

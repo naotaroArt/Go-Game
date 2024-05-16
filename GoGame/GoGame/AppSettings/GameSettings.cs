@@ -6,17 +6,9 @@ using System.Threading.Tasks;
 
 namespace GoGame.AppSettings
 {
-    internal class GameSettings
+    internal static class GameSettings
     {
         public static int BoardSize { get; set; }
 
-        public GameSettings(int boardSize)
-        {
-            BoardSize = boardSize;
-        }
-        public GameSettings()
-        {
-            BoardSize = 9;
-        }
     }
 }
