@@ -138,6 +138,7 @@ namespace GoGame
             _game = undoRedoService.UndoMove();
             contentControl.Content = _game.gameBoard;
             ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+            _game.gameBoard.Refresh();
         }
 
         private void ReDo_Click(object sender, RoutedEventArgs e)
@@ -146,6 +147,7 @@ namespace GoGame
             _game = undoRedoService.RedoMove();
             contentControl.Content = _game.gameBoard;
             ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+            _game.gameBoard.Refresh();
         }
     }
 }

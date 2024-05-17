@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using GoGame.AppSettings;
 using GoGame.Views;
 
 namespace GoGame.Models
@@ -24,6 +25,7 @@ namespace GoGame.Models
         public bool endGame;
         public int numberOfPasses;
         public int countMove;
+        public bool startKo;
 
         public delegate void MyDelegate();
         public event MyDelegate ChangingCurrentMove;
@@ -38,6 +40,7 @@ namespace GoGame.Models
             endGame = false;
             numberOfPasses = 0;
             countMove = 0;
+            startKo = false;
         }
 
         public Game(GameBoard gameBoard, Board board)
@@ -50,6 +53,7 @@ namespace GoGame.Models
             endGame = false;
             numberOfPasses = 0;
             countMove = 0;
+            startKo = false;
         }
 
         ~Game()
@@ -63,6 +67,7 @@ namespace GoGame.Models
             endGame = false;
             numberOfPasses = 0;
             countMove = 0;
+            startKo = false;
         }
         public object Clone() => new Game(new GameBoard(this), new Board());
 
@@ -74,16 +79,31 @@ namespace GoGame.Models
 
             // Проверка на самоубийство
             if (IsSuicide(x, y, stoneColor))
-                return false;
-
-            // Проверка на запрет хода (ко рку)
-            if (IsKo(x, y, stoneColor))
-                return false;
+                return false;                     
 
             // Проверка на захват камней противника
             List<Stone> capturedStones = GetCapturedStones(x, y, stoneColor);
             if (capturedStones.Count > 0)
             {
+                UpdateStonesForKo();
+                // Проверка на запрет хода (ко рку)
+                if (IsKo())
+                {
+                    foreach(Stone s in capturedStones)
+                    {
+                        if(currentMove == CellState.White)
+                        {
+                            board.boardStone[s.x, s.y].state = CellState.Black;
+                            scoreWhite--;
+                        }
+                        else if(currentMove == CellState.Black)
+                        {
+                            board.boardStone[s.x, s.y].state = CellState.White;
+                            scoreBlack--;
+                        }
+                    }
+                    return false;
+                }
                 foreach (Stone s in capturedStones)
                 {
                     board.boardStone[s.x, s.y].state = CellState.Empty;
@@ -105,7 +125,7 @@ namespace GoGame.Models
                         }
                     }
                 }
-            }
+            }           
             countMove++;
             capturedStones.Clear();
             ChangingCurrentMove?.Invoke();
@@ -201,11 +221,78 @@ namespace GoGame.Models
             return stones;
         }
 
-        private bool IsKo(int x, int y, CellState stoneColor)
+        private bool IsKo()
         {
+            if (countMove <= 1)
+                return false;
+            bool flag = true;
             // TODO: Реализовать проверку на запрет хода (ко рку)
+            if (startKo)
+            {
+                for (int i = 0; i < GameSettings.BoardSize; i++)
+                {
+                    for (int j = 0; j < GameSettings.BoardSize; j++)
+                    {
+                        if(board.stonesForCheckKo1[i, j] != board.boardStone[i, j].state)
+                        {
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < GameSettings.BoardSize; i++)
+                {
+                    for (int j = 0; j < GameSettings.BoardSize; j++)
+                    {
+                        if (board.stonesForCheckKo2[i, j] != board.boardStone[i, j].state)
+                        {
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+            }
+           
+            return flag;
+        }
 
-            return false;
+        private void UpdateStonesForKo()
+        {
+            if (startKo)
+            {
+                for(int i = 0; i< GameSettings.BoardSize; i++)
+                {
+                    for (int j = 0; j < GameSettings.BoardSize; j++)
+                    {
+                        if (board.boardStone[i,j].state == CellState.Empty)
+                            board.stonesForCheckKo1[i, j] = CellState.Empty;
+                        else if(board.boardStone[i, j].state == CellState.White)
+                            board.stonesForCheckKo1[i, j] = CellState.White;
+                        else if(board.boardStone[i, j].state == CellState.Black)
+                            board.stonesForCheckKo1[i, j] = CellState.Black;
+                    }
+                }
+                startKo = false;
+            }
+            else
+            {
+                for (int i = 0; i < GameSettings.BoardSize; i++)
+                {
+                    for (int j = 0; j < GameSettings.BoardSize; j++)
+                    {
+                        if (board.boardStone[i, j].state == CellState.Empty)
+                            board.stonesForCheckKo2[i, j] = CellState.Empty;
+                        else if (board.boardStone[i, j].state == CellState.White)
+                            board.stonesForCheckKo2[i, j] = CellState.White;
+                        else if (board.boardStone[i, j].state == CellState.Black)
+                            board.stonesForCheckKo2[i, j] = CellState.Black;
+                    }
+                }
+                startKo = true;
+            }
         }
 
         private bool ReChekIsSuicide(int x, int y, CellState stoneColor)
@@ -213,7 +300,10 @@ namespace GoGame.Models
             int way = 4;
             if (board.boardStone[x,y].stateTop != stoneColor && board.boardStone[x, y].stateTop != CellState.Empty && board.boardStone[x,y].stateTop != CellState.OutRange)
             {
-                way--;
+                if (!board.IsGroupOfStoneOnSuicide(x, y - 1, ref board.boardStone[x, y], stoneColor))
+                {
+                    way--;
+                }
             }
             else if(board.boardStone[x, y].stateTop == stoneColor)
             {
@@ -228,7 +318,10 @@ namespace GoGame.Models
             }
             if(board.boardStone[x, y].stateBot != stoneColor && board.boardStone[x, y].stateBot != CellState.Empty && board.boardStone[x, y].stateBot != CellState.OutRange)
             {
-                way--;
+                if (!board.IsGroupOfStoneOnSuicide(x, y + 1, ref board.boardStone[x, y], stoneColor))
+                {
+                    way--;
+                }
             }
             else if(board.boardStone[x, y].stateBot == stoneColor)
             {
@@ -243,7 +336,10 @@ namespace GoGame.Models
             }
             if (board.boardStone[x, y].stateLeft != stoneColor && board.boardStone[x, y].stateLeft != CellState.Empty && board.boardStone[x, y].stateLeft != CellState.OutRange)
             {
-                way--;
+                if (!board.IsGroupOfStoneOnSuicide(x - 1, y, ref board.boardStone[x, y], stoneColor))
+                {
+                    way--;
+                }
             }
             else if(board.boardStone[x, y].stateLeft == stoneColor)
             {
@@ -258,7 +354,10 @@ namespace GoGame.Models
             }
             if (board.boardStone[x, y].stateRight != stoneColor && board.boardStone[x, y].stateRight != CellState.Empty && board.boardStone[x, y].stateRight != CellState.OutRange)
             {
-                way--;
+                if (!board.IsGroupOfStoneOnSuicide(x + 1, y, ref board.boardStone[x, y], stoneColor))
+                {
+                    way--;
+                }
             }
             else if(board.boardStone[x, y].stateRight == stoneColor)
             {

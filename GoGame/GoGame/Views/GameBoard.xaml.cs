@@ -30,7 +30,7 @@ namespace GoGame.Views
             InitializeComponent();
             FillGridWithBorders();
             FillGridWithEllipse();
-            this._game = game;
+            _game = game;
         }
 
         private void FillGridWithBorders()
@@ -78,7 +78,7 @@ namespace GoGame.Views
                 {
                     Ellipse ellipse = new Ellipse
                     {
-                        Name = $"ellipse_{row}_{col}",
+                        Name = $"ellipse_{col}_{row}",
                         Width = ((gameBoard.Width - 10) / (GameSettings.BoardSize + 1)) - 5,
                         Height = ((gameBoard.Height - 10) / (GameSettings.BoardSize + 1)) - 5,
                         Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)), // Полупрозрачный цвет
@@ -111,6 +111,7 @@ namespace GoGame.Views
                 _game.board.UpdateBordStons();
                 _game.currentMove = _game.currentMove == CellState.White ? CellState.Black : CellState.White;
                 InvalidateVisual();
+               // Refresh();
                 //MessageBox.Show($"Button clicked: x:{col} y:{row}");
             }
             else
@@ -144,5 +145,28 @@ namespace GoGame.Views
                 return;           
             ellipse.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         }  
+
+        public void Refresh()
+        {
+            foreach (Object child in gridBoardBig.Children)
+            {
+                if (child is Ellipse ellip)
+                {
+                    string[] nameParts = ellip.Name.Split('_');
+                    if (nameParts.Length == 3 && nameParts[0] == "ellipse")
+                    {
+                        if (int.TryParse(nameParts[1], out int ellipseX) && int.TryParse(nameParts[2], out int ellipseY))
+                        {
+                            if (_game.board.boardStone[ellipseX, ellipseY].state == CellState.White)
+                                ellip.Fill = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
+                            if (_game.board.boardStone[ellipseX, ellipseY].state == CellState.Black)
+                                ellip.Fill = new SolidColorBrush(Color.FromArgb(128, 255, 255, 255));
+                            if(_game.board.boardStone[ellipseX, ellipseY].state == CellState.Empty)
+                                ellip.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                        }
+                    }
+                }
+            }
+        }
     }
 }

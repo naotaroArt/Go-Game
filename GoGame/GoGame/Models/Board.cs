@@ -28,12 +28,16 @@ namespace GoGame.Models
         public int boardSize;
         public Stone[,] boardStone;
         List<Stone> varStones;
+        public CellState[,] stonesForCheckKo1;
+        public CellState[,] stonesForCheckKo2;
 
         public Board()
         {
             varStones = new List<Stone>();
             boardSize = GameSettings.BoardSize;
             boardStone = new Stone[boardSize, boardSize];
+            stonesForCheckKo1 = new CellState[boardSize, boardSize];
+            stonesForCheckKo2 = new CellState[boardSize, boardSize];
             InitializeBoard();
         }
 
@@ -229,26 +233,6 @@ namespace GoGame.Models
                 if(s.stateTop == CellState.Empty 
                     || s.stateBot == CellState.Empty 
                     || s.stateLeft == CellState.Empty 
-                    || s.stateRight == CellState.Empty)
-                {
-                    flag = false;
-                }
-            }
-            boardStone[stone.x, stone.y].state = CellState.Empty;
-            UpdateBordStons();
-            return flag;
-        }
-
-        public bool IsGroupOfStoneOnCaptured(int x, int y, ref Stone stone, CellState currentMove)
-        {
-            bool flag = true;
-            boardStone[stone.x, stone.y].state = currentMove;
-            UpdateBordStons();
-            foreach (Stone s in boardStone[x, y].groupOfStones)
-            {
-                if (s.stateTop == CellState.Empty
-                    || s.stateBot == CellState.Empty
-                    || s.stateLeft == CellState.Empty
                     || s.stateRight == CellState.Empty)
                 {
                     flag = false;
