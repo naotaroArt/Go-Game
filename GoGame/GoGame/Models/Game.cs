@@ -379,6 +379,7 @@ namespace GoGame.Models
         {
             if (endGame)
             {
+                CalculateTerritoryScores();
                 gameBoard.IsEnabled = false;
                 if(scoreBlack > scoreWhite)
                 {
@@ -391,6 +392,95 @@ namespace GoGame.Models
                 else
                 {
                     MessageBox.Show($"Draw \n score Player1 = {scoreWhite} \n score Player2 = {scoreBlack}");
+                }
+            }
+        }
+
+        // Метод для подсчета очков захваченной территории
+        public void CalculateTerritoryScores()
+        {
+            bool[,] visited = new bool[board.boardSize, board.boardSize];
+
+            for (int x = 0; x < board.boardSize; x++)
+            {
+                for (int y = 0; y < board.boardSize; y++)
+                {
+                    if (!visited[x, y] && board.boardStone[x, y].state == CellState.Empty)
+                    {
+                        var territory = GetTerritory(x, y, visited);
+                        if (territory != null)
+                        {
+                            if (territory.Item2 == CellState.White)
+                            {
+                                scoreWhite += territory.Item1.Count;
+                            }
+                            else if (territory.Item2 == CellState.Black)
+                            {
+                                scoreBlack += territory.Item1.Count;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private Tuple<List<Stone>, CellState> GetTerritory(int startX, int startY, bool[,] visited)
+        {
+            List<Stone> territory = new List<Stone>();
+            Queue<Stone> queue = new Queue<Stone>();
+            CellState boundaryState = CellState.Empty;
+            bool isEnclosed = true;
+
+            queue.Enqueue(board.boardStone[startX, startY]);
+            visited[startX, startY] = true;
+
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+                territory.Add(current);
+
+                foreach (var neighbor in GetNeighbors(current))
+                {
+                    if (neighbor.state == CellState.Empty && !visited[neighbor.x, neighbor.y])
+                    {
+                        queue.Enqueue(neighbor);
+                        visited[neighbor.x, neighbor.y] = true;
+                    }
+                    else if (neighbor.state == CellState.Black || neighbor.state == CellState.White)
+                    {
+                        if (boundaryState == CellState.Empty)
+                        {
+                            boundaryState = neighbor.state;
+                        }
+                        else if (boundaryState != neighbor.state)
+                        {
+                            isEnclosed = false;
+                        }
+                    }
+                }
+            }
+
+            return isEnclosed ? Tuple.Create(territory, boundaryState) : null;
+        }
+
+        private IEnumerable<Stone> GetNeighbors(Stone stone)
+        {
+            int[][] directions = new int[][]
+            {
+            new int[] { 0, -1 }, // Top
+            new int[] { 0, 1 },  // Bottom
+            new int[] { -1, 0 }, // Left
+            new int[] { 1, 0 }   // Right
+            };
+
+            foreach (var direction in directions)
+            {
+                int newX = stone.x + direction[0];
+                int newY = stone.y + direction[1];
+
+                if (newX >= 0 && newX < board.boardSize && newY >= 0 && newY < board.boardSize)
+                {
+                    yield return board.boardStone[newX, newY];
                 }
             }
         }

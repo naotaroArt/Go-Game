@@ -77,6 +77,8 @@ namespace GoGame
 
         private void Pass_Click(object sender, RoutedEventArgs e)
         {
+            if (_game.endGame)
+                return;
             _game.numberOfPasses++;
             if (_game.numberOfPasses == 2)
             {
@@ -139,6 +141,8 @@ namespace GoGame
 
         private void UnDo_Click(object sender, RoutedEventArgs e)
         {
+            if (_game.endGame)
+                return;
             _game = null;
             _game = undoRedoService.UndoMove();
             contentControl.Content = _game.gameBoard;
@@ -148,6 +152,8 @@ namespace GoGame
 
         private void ReDo_Click(object sender, RoutedEventArgs e)
         {
+            if (_game.endGame)
+                return;
             _game = null;
             _game = undoRedoService.RedoMove();
             contentControl.Content = _game.gameBoard;
