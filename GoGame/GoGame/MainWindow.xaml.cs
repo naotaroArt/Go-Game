@@ -32,6 +32,7 @@ namespace GoGame
         {
             InitializeComponent();
             InitializeGame();
+            ChangingScore();
             undoRedoService = new UndoRedoService();       
         }       
 
@@ -48,8 +49,8 @@ namespace GoGame
 
         public void ChangingScore()
         {
-            scorePlayer1.Content = "Score: " + Convert.ToString(_game.scoreWhite);
-            scorePlayer2.Content = "Score: " + Convert.ToString(_game.scoreBlack);
+            scorePlayer1.Content = "Сaptured \n" + Convert.ToString(_game.scoreWhite);
+            scorePlayer2.Content = "Сaptured \n" + Convert.ToString(_game.scoreBlack);
         }
 
         public void ChangingCurrentPlayer()
@@ -76,11 +77,15 @@ namespace GoGame
 
         private void Pass_Click(object sender, RoutedEventArgs e)
         {
+            _game.numberOfPasses++;
             if (_game.numberOfPasses == 2)
+            {
                 _game.endGame = true;
+                _game.EndGame();
+                return;
+            }
             ChangingCurrentPlayer();
             _game.currentMove = _game.currentMove == CellState.White ? CellState.Black : CellState.White;
-            _game.numberOfPasses++;
         }
 
         private void PassReset()

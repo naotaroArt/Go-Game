@@ -374,5 +374,25 @@ namespace GoGame.Models
                 return true;
             return false;
         }
+
+        public void EndGame()
+        {
+            if (endGame)
+            {
+                gameBoard.IsEnabled = false;
+                if(scoreBlack > scoreWhite)
+                {
+                    MessageBox.Show($"Win Player2 with a point difference of {scoreBlack-scoreWhite} stones\n score Player1 = {scoreWhite} \n score Player2 = {scoreBlack}");
+                }
+                else if(scoreWhite > scoreBlack)
+                {
+                    MessageBox.Show($"Win Player1 with a point difference of {scoreWhite - scoreBlack} stones\n score Player1 = {scoreWhite} \n score Player2 = {scoreBlack}");
+                }
+                else
+                {
+                    MessageBox.Show($"Draw \n score Player1 = {scoreWhite} \n score Player2 = {scoreBlack}");
+                }
+            }
+        }
     }
 }

@@ -1,2 +1,3 @@
 # Go Game
-It`s my first project with git.  
+It is my first project with git.  
+![](GoGame\GoGame\Icons\GoGameIcon.png)
