@@ -31,8 +31,7 @@ namespace GoGame
         public MainWindow()
         {
             InitializeComponent();
-            InitializeGame();
-            ChangingScore();
+            InitializeGame();            
             undoRedoService = new UndoRedoService();       
         }       
 
@@ -128,6 +127,7 @@ namespace GoGame
             contentControl.Content = _game.gameBoard;
             currentPlayer.Content = "Player1";
             ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+            ChangingScore();
             _game.ChangingCurrentMove += ChangingScore;
             _game.ChangingCurrentMove += ChangingCurrentPlayer;
             _game.ChangingCurrentMove += PassReset;
@@ -143,22 +143,30 @@ namespace GoGame
         {
             if (_game.endGame)
                 return;
-            _game = null;
-            _game = undoRedoService.UndoMove();
-            contentControl.Content = _game.gameBoard;
-            ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
-            _game.gameBoard.Refresh();
+            Game previousGame = undoRedoService.UndoMove();
+            if (previousGame != null)
+            {
+                _game = previousGame;
+                this.Content = _game.gameBoard; // Обновить UI
+                contentControl.Content = _game.gameBoard;
+                ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+                _game.gameBoard.Refresh();
+            }
         }
 
         private void ReDo_Click(object sender, RoutedEventArgs e)
         {
             if (_game.endGame)
                 return;
-            _game = null;
-            _game = undoRedoService.RedoMove();
-            contentControl.Content = _game.gameBoard;
-            ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
-            _game.gameBoard.Refresh();
+            Game nextGame = undoRedoService.RedoMove();
+            if (nextGame != null)
+            {
+                _game = nextGame;
+                this.Content = _game.gameBoard; // Обновить UI
+                contentControl.Content = _game.gameBoard;
+                ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
+                _game.gameBoard.Refresh();
+            }
         }
     }
 }

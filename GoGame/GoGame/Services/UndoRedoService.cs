@@ -1,4 +1,5 @@
 ﻿using GoGame.Models;
+using GoGame.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,11 @@ namespace GoGame.Services
 
         public void AddMove(Game game)
         {
-            Game game1 = (Game)game.Clone();
-
-            _undoStack.Push(game1);
-            _redoStack.Clear(); // Очищаем стек переходов назад, когда добавляем новый ход
+            // Клонируем текущее состояние игры и добавляем его в стек undo
+            Game clonedGame = (Game)game.Clone();
+            _undoStack.Push(clonedGame);
+            // Очищаем стек redo, так как мы начали новую ветку действий
+            _redoStack.Clear();
         }
 
         public Game UndoMove()
@@ -32,7 +34,8 @@ namespace GoGame.Services
                 return null;
 
             Game previousGame = _undoStack.Pop();
-            _redoStack.Push(previousGame);
+            _redoStack.Push((Game)previousGame.Clone());
+            previousGame.gameBoard = new GameBoard(previousGame);
             return previousGame;
         }
 
@@ -42,7 +45,8 @@ namespace GoGame.Services
                 return null;
 
             Game nextGame = _redoStack.Pop();
-            _undoStack.Push(nextGame);
+            _undoStack.Push((Game)nextGame.Clone());
+            nextGame.gameBoard = new GameBoard(nextGame);
             return nextGame;
         }
     }

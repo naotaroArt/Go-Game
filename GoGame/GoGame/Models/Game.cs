@@ -13,7 +13,7 @@ using GoGame.Views;
 
 namespace GoGame.Models
 {
-    internal class Game
+    internal class Game : ICloneable
     {
         public Board board;
         public static CellState playr1 = CellState.White;
@@ -43,17 +43,17 @@ namespace GoGame.Models
             startKo = false;
         }
 
-        public Game(GameBoard gameBoard, Board board)
+        public Game(Board board, CellState currentMove, int scoreWhite, int scoreBlack, bool endGame, int numberOfPasses, int countMove, bool startKo)
         {
             this.board = board;
-            currentMove = playr1;
-            this.gameBoard = gameBoard;
-            scoreWhite = 0;
-            scoreBlack = 0;
-            endGame = false;
-            numberOfPasses = 0;
-            countMove = 0;
-            startKo = false;
+            this.currentMove = currentMove;
+            this.scoreWhite = scoreWhite;
+            this.scoreBlack = scoreBlack;
+            this.endGame = endGame;
+            this.numberOfPasses = numberOfPasses;
+            this.countMove = countMove;
+            this.startKo = startKo;
+            this.gameBoard = new GameBoard(this);
         }
 
         ~Game()
@@ -69,7 +69,11 @@ namespace GoGame.Models
             countMove = 0;
             startKo = false;
         }
-        public object Clone() => new Game(new GameBoard(this), new Board());
+        public object Clone()
+        {
+            Board clonedBoard = board.Clone() as Board;
+            return new Game(clonedBoard, currentMove, scoreWhite, scoreBlack, endGame, numberOfPasses, countMove, startKo);
+        }
 
         public bool IsMoveValid(int x, int y, CellState stoneColor)
         {
@@ -128,7 +132,6 @@ namespace GoGame.Models
             }           
             countMove++;
             capturedStones.Clear();
-            ChangingCurrentMove?.Invoke();
             return true;
         }
 
@@ -136,6 +139,11 @@ namespace GoGame.Models
         {
             // TODO: Реализовать проверку на самоубийство
             return ReChekIsSuicide(x,y,stoneColor);
+        }
+
+        public void MoveIsMade()
+        {
+            ChangingCurrentMove?.Invoke();
         }
 
         private List<Stone> GetCapturedStones(int x, int y, CellState stoneColor)

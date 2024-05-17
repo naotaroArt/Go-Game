@@ -109,6 +109,7 @@ namespace GoGame.Views
                 _game.board.boardStone[col, row].state = _game.currentMove;               
                 ellipse.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
                 _game.board.UpdateBordStons();
+                _game.MoveIsMade();
                 _game.currentMove = _game.currentMove == CellState.White ? CellState.Black : CellState.White;
                 InvalidateVisual();
                // Refresh();
@@ -158,9 +159,9 @@ namespace GoGame.Views
                         if (int.TryParse(nameParts[1], out int ellipseX) && int.TryParse(nameParts[2], out int ellipseY))
                         {
                             if (_game.board.boardStone[ellipseX, ellipseY].state == CellState.White)
-                                ellip.Fill = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
+                                ellip.Fill = Brushes.White;
                             if (_game.board.boardStone[ellipseX, ellipseY].state == CellState.Black)
-                                ellip.Fill = new SolidColorBrush(Color.FromArgb(128, 255, 255, 255));
+                                ellip.Fill = Brushes.Black;
                             if(_game.board.boardStone[ellipseX, ellipseY].state == CellState.Empty)
                                 ellip.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
                         }

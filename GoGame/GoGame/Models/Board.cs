@@ -20,7 +20,19 @@ namespace GoGame.Models
         public CellState stateLeft;
         public CellState stateRight;
 
-        public List<Stone> groupOfStones;      
+        public List<Stone> groupOfStones;
+
+        public Stone(int x, int y, CellState state)
+        {
+            this.x = x;
+            this.y = y;
+            this.state = state;
+            this.stateTop = CellState.Empty;
+            this.stateBot = CellState.Empty;
+            this.stateLeft = CellState.Empty;
+            this.stateRight = CellState.Empty;
+            this.groupOfStones = new List<Stone>();
+        }
     }
 
     internal class Board
@@ -39,6 +51,20 @@ namespace GoGame.Models
             stonesForCheckKo1 = new CellState[boardSize, boardSize];
             stonesForCheckKo2 = new CellState[boardSize, boardSize];
             InitializeBoard();
+        }
+
+        private Board(int boardSize, Stone[,] boardStone, CellState[,] stonesForCheckKo1, CellState[,] stonesForCheckKo2)
+        {
+            this.boardSize = boardSize;
+            this.boardStone = (Stone[,])boardStone.Clone();
+            this.stonesForCheckKo1 = (CellState[,])stonesForCheckKo1.Clone();
+            this.stonesForCheckKo2 = (CellState[,])stonesForCheckKo2.Clone();
+            InitializeBoard();
+        }
+
+        public object Clone()
+        {
+            return new Board(boardSize, (Stone[,])boardStone.Clone(), (CellState[,])stonesForCheckKo1.Clone(), (CellState[,])stonesForCheckKo2.Clone());
         }
 
         private void InitializeBoard()
