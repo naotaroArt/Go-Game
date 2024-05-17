@@ -1,6 +1,6 @@
 # Go Game
  
-![go game](GoGame\GoGame\Icons\GoGameIcon.png)
+![go game](GoGame/GoGame/Icons/GoGameIcon.png)
 
 ## Описание проекта
 
