@@ -11,7 +11,7 @@ namespace GoGame.Models
     public enum CellState { Black = 2, White = 1, Empty = 0, OutRange = 3}
     public enum Direction { top, bot, left, right }
 
-    struct Stone
+    struct Stone : ICloneable
     {
         public int x, y;
         public CellState state;
@@ -33,9 +33,14 @@ namespace GoGame.Models
             this.stateRight = CellState.Empty;
             this.groupOfStones = new List<Stone>();
         }
+
+        public object Clone()
+        {
+            return new Stone(x, y, state);
+        }
     }
 
-    internal class Board
+    internal class Board : ICloneable
     {
         public int boardSize;
         public Stone[,] boardStone;
@@ -53,9 +58,10 @@ namespace GoGame.Models
             InitializeBoard();
         }
 
-        private Board(int boardSize, Stone[,] boardStone, CellState[,] stonesForCheckKo1, CellState[,] stonesForCheckKo2)
+        private Board(int boardSize, List<Stone> varStones, Stone[,] boardStone, CellState[,] stonesForCheckKo1, CellState[,] stonesForCheckKo2)
         {
             this.boardSize = boardSize;
+            this.varStones = varStones;
             this.boardStone = (Stone[,])boardStone.Clone();
             this.stonesForCheckKo1 = (CellState[,])stonesForCheckKo1.Clone();
             this.stonesForCheckKo2 = (CellState[,])stonesForCheckKo2.Clone();
@@ -64,7 +70,7 @@ namespace GoGame.Models
 
         public object Clone()
         {
-            return new Board(boardSize, (Stone[,])boardStone.Clone(), (CellState[,])stonesForCheckKo1.Clone(), (CellState[,])stonesForCheckKo2.Clone());
+            return new Board(boardSize, varStones, (Stone[,])boardStone.Clone(), (CellState[,])stonesForCheckKo1.Clone(), (CellState[,])stonesForCheckKo2.Clone());
         }
 
         private void InitializeBoard()

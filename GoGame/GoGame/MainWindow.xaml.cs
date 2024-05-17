@@ -146,8 +146,8 @@ namespace GoGame
             Game previousGame = undoRedoService.UndoMove();
             if (previousGame != null)
             {
+                _game = null;
                 _game = previousGame;
-                this.Content = _game.gameBoard; // Обновить UI
                 contentControl.Content = _game.gameBoard;
                 ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
                 _game.gameBoard.Refresh();
@@ -161,8 +161,8 @@ namespace GoGame
             Game nextGame = undoRedoService.RedoMove();
             if (nextGame != null)
             {
+                _game = null;
                 _game = nextGame;
-                this.Content = _game.gameBoard; // Обновить UI
                 contentControl.Content = _game.gameBoard;
                 ellipseCurrentMove.Fill = _game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
                 _game.gameBoard.Refresh();
