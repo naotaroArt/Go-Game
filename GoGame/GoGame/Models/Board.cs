@@ -43,7 +43,7 @@ namespace GoGame.Models
     {
         public int boardSize;
         public Stone[,] boardStone;
-        List<Stone> varStones;
+        readonly List<Stone> varStones;
         public CellState[,] stonesForCheckKo1;
         public CellState[,] stonesForCheckKo2;
 

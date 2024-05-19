@@ -31,8 +31,7 @@ namespace GoGame.Models
         public bool startKo;
         public bool useKomi;
 
-        public delegate void MyDelegate();
-        public event MyDelegate ChangingCurrentMove;
+        public event Action ChangingCurrentMove;
 
         public Game()
         {
@@ -396,19 +395,19 @@ namespace GoGame.Models
             {
                 CalculateTerritoryScores();
                 if(useKomi)
-                    scoreWhite += GameSettings.KamiScore;
+                    scoreWhite += GameSettings.KomiScore;
                 gameBoard.IsEnabled = false;
                 if(scoreBlack > scoreWhite)
                 {
-                    MessageBox.Show($"Win Player1 with a point difference of {scoreBlack-scoreWhite} stones\n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite}");
+                    MessageBox.Show($"Win Player1 with a point difference of {scoreBlack-scoreWhite} stones\n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite} \n count move {countMove}");
                 }
                 else if(scoreWhite > scoreBlack)
                 {
-                    MessageBox.Show($"Win Player2 with a point difference of {scoreWhite - scoreBlack} stones\n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite}");
+                    MessageBox.Show($"Win Player2 with a point difference of {scoreWhite - scoreBlack} stones\n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite} \n count move {countMove}");
                 }
                 else
                 {
-                    MessageBox.Show($"Draw \n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite}");
+                    MessageBox.Show($"Draw \n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite} \n count move {countMove}");
                 }
             }
         }
