@@ -18,17 +18,18 @@ namespace GoGame.Models
     internal class Game : ICloneable
     {
         public Board board;
-        public static CellState playr1 = CellState.White;
-        public static CellState playr2 = CellState.Black;
+        public static CellState playr1 = CellState.Black;
+        public static CellState playr2 = CellState.White;
         public CellState currentMove;
         [JsonIgnore]
         public GameBoard gameBoard;
-        public int scoreWhite;
-        public int scoreBlack;
+        public double scoreWhite;
+        public double scoreBlack;
         public bool endGame;
         public int numberOfPasses;
         public int countMove;
         public bool startKo;
+        public bool useKomi;
 
         public delegate void MyDelegate();
         public event MyDelegate ChangingCurrentMove;
@@ -44,9 +45,10 @@ namespace GoGame.Models
             numberOfPasses = 0;
             countMove = 0;
             startKo = false;
+            useKomi = false;
         }
 
-        public Game(Board board, CellState currentMove, int scoreWhite, int scoreBlack, bool endGame, int numberOfPasses, int countMove, bool startKo)
+        public Game(Board board, CellState currentMove, double scoreWhite, double scoreBlack, bool endGame, int numberOfPasses, int countMove, bool startKo, bool useKomi)
         {
             this.board = board;
             this.currentMove = currentMove;
@@ -56,6 +58,7 @@ namespace GoGame.Models
             this.numberOfPasses = numberOfPasses;
             this.countMove = countMove;
             this.startKo = startKo;
+            this.useKomi = useKomi;
             this.gameBoard = new GameBoard(this);
         }
 
@@ -71,11 +74,12 @@ namespace GoGame.Models
             numberOfPasses = 0;
             countMove = 0;
             startKo = false;
+            useKomi = false;
         }
         public object Clone()
         {
             Board clonedBoard = board.Clone() as Board;
-            return new Game(clonedBoard, currentMove, scoreWhite, scoreBlack, endGame, numberOfPasses, countMove, startKo);
+            return new Game(clonedBoard, currentMove, scoreWhite, scoreBlack, endGame, numberOfPasses, countMove, startKo, useKomi);
         }
 
         public bool IsMoveValid(int x, int y, CellState stoneColor)
@@ -391,18 +395,20 @@ namespace GoGame.Models
             if (endGame)
             {
                 CalculateTerritoryScores();
+                if(useKomi)
+                    scoreWhite += GameSettings.KamiScore;
                 gameBoard.IsEnabled = false;
                 if(scoreBlack > scoreWhite)
                 {
-                    MessageBox.Show($"Win Player2 with a point difference of {scoreBlack-scoreWhite} stones\n score Player1 = {scoreWhite} \n score Player2 = {scoreBlack}");
+                    MessageBox.Show($"Win Player1 with a point difference of {scoreBlack-scoreWhite} stones\n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite}");
                 }
                 else if(scoreWhite > scoreBlack)
                 {
-                    MessageBox.Show($"Win Player1 with a point difference of {scoreWhite - scoreBlack} stones\n score Player1 = {scoreWhite} \n score Player2 = {scoreBlack}");
+                    MessageBox.Show($"Win Player2 with a point difference of {scoreWhite - scoreBlack} stones\n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite}");
                 }
                 else
                 {
-                    MessageBox.Show($"Draw \n score Player1 = {scoreWhite} \n score Player2 = {scoreBlack}");
+                    MessageBox.Show($"Draw \n score Player1 = {scoreBlack} \n score Player2 = {scoreWhite}");
                 }
             }
         }

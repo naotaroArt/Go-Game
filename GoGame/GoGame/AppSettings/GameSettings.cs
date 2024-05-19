@@ -10,5 +10,7 @@ namespace GoGame.AppSettings
     {
         public static int BoardSize { get; set; }
 
+        public static double KamiScore { get; set; } = 6.5;
+
     }
 }

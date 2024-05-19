@@ -48,8 +48,8 @@ namespace GoGame
 
         public void ChangingScore()
         {
-            scorePlayer1.Content = "Сaptured \n" + Convert.ToString(game.scoreWhite);
-            scorePlayer2.Content = "Сaptured \n" + Convert.ToString(game.scoreBlack);
+            scorePlayer1.Content = "Сaptured \n" + Convert.ToString(game.scoreBlack);
+            scorePlayer2.Content = "Сaptured \n" + Convert.ToString(game.scoreWhite);
         }
 
         public void ChangingCurrentPlayer()
@@ -167,6 +167,11 @@ namespace GoGame
                 ellipseCurrentMove.Fill = game.currentMove == CellState.White ? Brushes.White : Brushes.Black;
                 game.gameBoard.Refresh();
             }
+        }
+
+        private void UseKomi_Click(object sender, RoutedEventArgs e)
+        {
+            game.useKomi = (bool)UseKomi.IsChecked;
         }
     }
 }

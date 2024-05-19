@@ -9,7 +9,6 @@ using GoGame.AppSettings;
 namespace GoGame.Models
 {
     public enum CellState { Black = 2, White = 1, Empty = 0, OutRange = 3}
-    public enum Direction { top, bot, left, right }
 
     struct Stone : ICloneable
     {
