@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.IO;
+using System.Text.Json.Serialization;
+using GoGame.Views;
 
 namespace GoGame.Services
 {
@@ -21,7 +23,8 @@ namespace GoGame.Services
                 // Получаем путь к выбранному файлу
                 string filePath = saveFileDialog.FileName;
 
-                string json = JsonSerializer.Serialize(game);
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(game, options);
                 File.WriteAllText(filePath, json);
             }
         }
@@ -36,9 +39,11 @@ namespace GoGame.Services
                 string filePath = openFileDialog.FileName;
 
                 string json = File.ReadAllText(filePath);
-                return JsonSerializer.Deserialize<Game>(json);
+                Game loadedGame = JsonSerializer.Deserialize<Game>(json);
+                loadedGame.gameBoard = new GameBoard(loadedGame); // Восстанавливаем связанный GameBoard
+                return loadedGame;
             }
-            return JsonSerializer.Deserialize<Game>("");
+            return null;
         }
     }
 }

@@ -10,6 +10,8 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using GoGame.AppSettings;
 using GoGame.Views;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace GoGame.Models
 {
@@ -19,6 +21,7 @@ namespace GoGame.Models
         public static CellState playr1 = CellState.White;
         public static CellState playr2 = CellState.Black;
         public CellState currentMove;
+        [JsonIgnore]
         public GameBoard gameBoard;
         public int scoreWhite;
         public int scoreBlack;
